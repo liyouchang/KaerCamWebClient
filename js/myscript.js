@@ -2,16 +2,35 @@ $(document).ready(function(){
 	
 	//disbaling some functions for Internet Explorer
 	$('.login-box').find('.input-large').removeClass('span10');
+	//bind to State Change
+
+	
+	//ajaxify menus
+	$('a.ajax-link').click(function(e){
+		if( $(this).parent().hasClass('active')) return;
+		var $clink=$(this);
+		var addr = $clink.attr('rel');
+		if(!addr) {return;}
+		e.preventDefault();
 		
-	//}
+		$('#loading').remove();
+		
+		$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+		doAjaxLoad(addr);
+		//$('#content').load(addr+" #content-inner");
+		//docReady();
+		//$('#loading').remove();
+		
+		$('ul.main-menu li.active').removeClass('active');
+		$clink.parent('li').addClass('active');	
+	});
 	
 	//highlight current / active link
 	$('ul.main-menu li a').each(function(){
 		if($($(this))[0].href==String(window.location))
-			$(this).parent().addClass('active');
+			;//$(this).parent().addClass('active');
 	});
 	
-
 	//animating menus on hover
 	$('ul.main-menu li:not(.nav-header)').hover(function(){
 		$(this).animate({'margin-left':'+=5'},300);
@@ -26,7 +45,20 @@ $(document).ready(function(){
 	//other things to do on document ready, seperated for ajax calls
 	docReady();
 });
-		
+function doAjaxLoad(addr)
+{
+	$.ajax({
+		url:addr,
+		dataType:"html",
+		success:function(msg){
+			//
+			$('#content').html($(msg).find('#content').html());
+			$('#loading').remove();
+			$('#content').fadeIn();
+			docReady();
+		}
+	});
+}
 		
 function docReady(){
 	//prevent # links from moving to top
@@ -168,10 +200,6 @@ function docReady(){
 		e.preventDefault();
 		$('#myModal').modal('show');
 	});
-
-
-
-	
 
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server

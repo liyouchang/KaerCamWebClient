@@ -18,6 +18,7 @@ var setting = {
 	}
 			
 };
+//todo:双击节点打开视频
 function zTreeOnDblClick(event, treeId, treeNode) {
 	if(!treeNode.isParent)
 	{

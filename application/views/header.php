@@ -95,17 +95,17 @@
 				<div class=" well nav  nav-collapse sidebar-nav ">
 					<ul class=" nav nav-tabs nav-stacked main-menu ">
 						<li class=" nav-header hidden-tablet">视频监控功能</li>
-						<li ><a class="" href="home"><i class="icon-home"></i><span class="hidden-tablet"> 功能列表</span></a></li>
-						<li><a class="" href="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
-						<li><a class="" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
-						<li><a class="" href="alarms_query"><i class="icon-list-alt"></i><span class="hidden-tablet"> 告警查询</span></a></li>
+						<li ><a class="ajax-link" href="home"><i class="icon-home"></i><span class="hidden-tablet"> 功能列表</span></a></li>
+						<li><a class="ajax-link" href="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
+						<li><a class="ajax-link" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
+						<li><a class="ajax-link" href="alarms_query"><i class="icon-list-alt"></i><span class="hidden-tablet"> 告警查询</span></a></li>
 	
 						<li><a class="ajax-link" href="snap_gallery"><i class="icon-camera"></i><span class="hidden-tablet"> 快照查询</span></a></li>
 						<li class=" nav-header hidden-tablet">其他功能</li>
 						<!-- <li><a class="" href="home"><i class="icon-user"></i><span class="hidden-tablet"> 账户设置</span></a></li> -->
-						<li><a class="" href="sys_config"><i class="icon-cog"></i><span class="hidden-tablet"> 系统配置</span></a></li>
+						<li><a class="ajax-link" rel="sys_config"><i class="icon-cog"></i><span class="hidden-tablet"> 系统配置</span></a></li>
 
-						<li><a href="login"><i class="icon-lock"></i><span class="hidden-tablet"> 退出系统</span></a></li>
+						<li><a class="ajax-link" href="login" ><i class="icon-lock"></i><span class="hidden-tablet"> 退出系统</span></a></li>
 					</ul>
 					 
 					<!-- <label  id="for-is-ajax" class="hidden-tablet" for="is-ajax"><input  id="is-ajax" type="checkbox"> Ajax on menu</label> -->
@@ -115,7 +115,7 @@
 
 			<div id="content" class="span10 pull-left">
 			 
-			
+			<div id="content-inner" >
 			
 			<!-- content starts -->
 			<?php } ?>

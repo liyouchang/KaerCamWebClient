@@ -1,4 +1,5 @@
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
+			</div><!-- content-inner ends -->
 			<!-- content ends -->
 			</div><!--/#content.span10-->
 		<?php } ?>
