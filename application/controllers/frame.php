@@ -19,14 +19,13 @@ class Frame extends CI_Controller {
 	 */
 	public function index()
 	{
-		//$this->_require_login(FALSE);
-		$data['title'] = '视频监控系统';
-		$data['css'] = array('style.css');
-		$data['js'] = 'frame_view.js';
-		$data['main_content'] = 'frame_view';
-		$this->load->view('includes/template_view', $data);
+		
+		  
+		$this->load->view("icon");
 	}
+
 }
+
 
 /* End of file login.php */
 /* Location: ./application/controll

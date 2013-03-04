@@ -19,16 +19,16 @@ $(function () {
 	});
 	var ajaxCheck = function (uname, pwd, remb) {
 		$(".btn-master").addClass("visibility");
-		var $params = "user_name=" + decodeURI(uname) + "&user_pwd=" + decodeURI(pwd) ;
+		//var params = "user_name=" + decodeURI(uname) + "&user_pwd=" + decodeURI(pwd) ;
+		var params = {user_name:decodeURI(uname) ,user_pwd:decodeURI(pwd)};
+		
 		$.ajax({
 			type: 'POST',
-			url: BASE_URL+'start/login_confirm',
-			//async: false,
-			cache: false,
+			url: BASE_URL+'login/login_confirm',
 			dataType: 'json',
-			data: $params,
+			data:params,
 			success: function (data) {
-				if (data == 1) {
+				if (data.errorCode == "0d") {
 					if ($('#remember-long').attr('checked')) { //记住密码
 						$.cookie('UserName', uname, { expires: 7, path: '/' });
 						$.cookie('Password', pwd, { expires: 7, path: '/' });
@@ -37,10 +37,10 @@ $(function () {
 						$.cookie('UserName', null,{ expires: 7, path: '/' });
 						$.cookie('Password', null,{ expires: 7, path: '/' });
 					}
-					changeLoginInfo("登陆成功","alert-success");
+					changeLoginInfo(data.errorDesc,"alert-success");
 					location.href = BASE_URL+"start/home";				
 				}else {
-					changeLoginInfo("登陆失败","alert-error");
+					changeLoginInfo(data.errorDesc,"alert-error");
 					$("#login-form input").attr('disabled', false);
 				}
 			},
@@ -98,7 +98,8 @@ function rememberPassword() {//页面加载完成之后执行自动登录检查
 						请使用您的用户名和密码登录.
 					</div>
 					
-					<form class="form-inline " id="login-form" action="#" method="post">
+					<!-- <form class="form-inline " id="login-form" action="#" method="post"> -->
+					<div class="form-inline " id="login-form" > 
 						<fieldset>
 							<div class="input-prepend " title="用户名" data-rel="tooltip">
 								<span class="add-on"><i class="icon-user"></i></span><input autofocus class="input-large span10" name="username" id="username" type="text"  />
@@ -120,10 +121,11 @@ function rememberPassword() {//页面加载完成之后执行自动登录检查
 							<div class="clearfix"></div>
 
 							<p class="center span5">
-							<button type="button" class="btn btn-primary btn-login" >登录</button>
+							 <input type="button" class="btn btn-primary btn-login" value="登录"/> 
+							<!--<input type="submit" class="btn btn-primary btn-login" value="登录"/>-->
 							</p>
 						</fieldset>
-					</form>
+					</div>
 					<div class="login_Panel_bottom">
                    	 	<a id="hreDownLoad" href ="<?php echo $pluginFilePath?>"  class="pull-left" style="display:block;">插件下载</a>
                 	</div>

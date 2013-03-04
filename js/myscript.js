@@ -4,7 +4,15 @@ $(document).ready(function(){
 	$('.login-box').find('.input-large').removeClass('span10');
 	//bind to State Change
 
-	
+	$('#content').ajaxStart(function(e){
+		alert("start");
+		$(this).fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+		
+	});
+	$('#content').ajaxStop(function(){
+		$('#loading').remove();
+		$('#content').fadeIn();	
+	});
 	//ajaxify menus
 	$('a.ajax-link').click(function(e){
 		if( $(this).parent().hasClass('active')) return;
@@ -15,8 +23,9 @@ $(document).ready(function(){
 		
 		$('#loading').remove();
 		
-		$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+		//$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
 		doAjaxLoad(addr);
+		
 		//$('#content').load(addr+" #content-inner");
 		//docReady();
 		//$('#loading').remove();
@@ -45,17 +54,33 @@ $(document).ready(function(){
 	//other things to do on document ready, seperated for ajax calls
 	docReady();
 });
+function sleep(numberMillis) { 
+	   var now = new Date();
+	   var exitTime = now.getTime() + numberMillis;  
+	   while (true) { 
+	       now = new Date(); 
+	       if (now.getTime() > exitTime)    return;
+	    }
+	}
 function doAjaxLoad(addr)
 {
 	$.ajax({
 		url:addr,
 		dataType:"html",
-		success:function(msg){
-			//
-			$('#content').html($(msg).find('#content').html());
+		beforeSend:function(){
+			//这里使用fadeout会没有效果
+			$('#content').hide().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+		},
+		complete:function(){
 			$('#loading').remove();
-			$('#content').fadeIn();
+		},
+		success:function(msg){
+			
+			$('#content').html(jQuery("<div>").append($.parseHTML(msg)).find('#content').html());
 			docReady();
+			//sleep(2000);
+			//$('#loading').remove();
+			$('#content').fadeIn();
 		}
 	});
 }
@@ -65,7 +90,7 @@ function docReady(){
 	$('a[href="#"][data-top!=true]').click(function(e){
 		e.preventDefault();
 	});
-
+	
 	//rich text editor
 	//$('.cleditor').cleditor();
 	
