@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Shojumaru);
+/*@import url(http://fonts.googleapis.com/css?family=Shojumaru);*/
 
 
 select{
@@ -436,7 +436,7 @@ background: #DEDEDE;
 }
 .login-header{
 padding-top:70px;
-height:200px;
+height:150px;
 }
 .pull-left{
 float:left !important;
@@ -445,7 +445,11 @@ float:left !important;
 float:right !important;
 }
 .remember{
- margin-top:3px;
+	margin-left:20px;
+
+ }
+.forgetPwd {
+	padding-left:50px;
 }
 .green {
 color: #458746;
@@ -467,7 +471,8 @@ margin-bottom: 10px;
 }
 .login-box .btn{
 margin-top:15px;
-width:100%
+margin-left:30px;
+width:200px;
 }
 .charisma_qr{
 height:136px;

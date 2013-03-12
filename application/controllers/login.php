@@ -18,7 +18,11 @@ class Login extends CI_Controller {
 		
 		$this->load->view('login_view',$data);
 	}
-
+	public function register()
+	{
+		$data['title'] = '用户注册';
+		$this->load->view('user_register',$data);
+	}
 	public function login_confirm()
 	{
 		$errorDescArray = array(
@@ -26,7 +30,8 @@ class Login extends CI_Controller {
 				"05" => "登录失败,用户名或密码错误",
 				"06" => "该用户已经登录",
 				"01" => "数据库服务器未启动",
-				"07" => "该用户不在服务的时间内"
+				"07" => "该用户不在服务的时间内",
+				"00" => "连接服务器失败"
 		);
 		$this->load->model("Socket_model");
 		$name = $_POST['user_name'];
@@ -48,4 +53,11 @@ class Login extends CI_Controller {
 		$this->session->sess_destroy();
 		header('Location: '.base_url().'login');
 	}
+	public function forget_pwd()
+	{
+		$data['title'] = '忘记密码';
+		$this->load->view('forget_pwd_view');
+		
+	}
+	
 }

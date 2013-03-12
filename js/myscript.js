@@ -1,5 +1,40 @@
 $(document).ready(function(){
-	
+
+	//验证设置
+	$.validator.setDefaults({
+		errorPlacement:function(label, element ){
+			if($(element).parent().hasClass("checkbox"))
+			{
+				label.insertAfter($(element).parent());
+			}
+			else
+			{
+				label.insertAfter($(element));
+			}
+		},
+		highlight: function( element, errorClass, validClass ) {
+			if ( element.type === "radio" ) {
+				this.findByName(element.name).addClass(errorClass).removeClass(validClass);
+			} else {
+				$(element).parents(".control-group").addClass(errorClass).removeClass(validClass);  
+				//$(element).addClass(errorClass).removeClass(validClass);
+			}
+		},
+		unhighlight: function( element, errorClass, validClass ) {
+			if ( element.type === "radio" ) {
+				this.findByName(element.name).removeClass(errorClass).addClass(validClass);
+			} else {
+				$(element).parents(".error").removeClass(errorClass).addClass(validClass);  
+				//$(element).removeClass(errorClass).addClass(validClass);
+			}
+		},
+		errorClass: "error",
+		validClass: "",
+		errorElementClass: 'help-inline' ,
+		errorElement: "span"
+			
+	});
+			
 	//disbaling some functions for Internet Explorer
 	$('.login-box').find('.input-large').removeClass('span10');
 	//bind to State Change
@@ -54,14 +89,7 @@ $(document).ready(function(){
 	//other things to do on document ready, seperated for ajax calls
 	docReady();
 });
-function sleep(numberMillis) { 
-	   var now = new Date();
-	   var exitTime = now.getTime() + numberMillis;  
-	   while (true) { 
-	       now = new Date(); 
-	       if (now.getTime() > exitTime)    return;
-	    }
-	}
+
 function doAjaxLoad(addr)
 {
 	$.ajax({

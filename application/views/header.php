@@ -20,8 +20,8 @@
 	<link href='<?php echo base_url('css/tupian.css') ?>' rel='stylesheet'>
 	<link href='<?php echo base_url('css/mystyle.css') ?>' rel='stylesheet'>
 	<link href="<?php echo base_url('css/myapp.css')?>" rel="stylesheet">
-
-<link href="<?php echo base_url('css/bootstrap-responsive.css') ?>" rel="stylesheet"> 
+	
+	<link href="<?php echo base_url('css/bootstrap-responsive.css') ?>" rel="stylesheet"> 
 	
 	<script type="text/javascript">SITE_URL = "<?php echo site_url() ?>";BASE_URL = "<?php echo base_url()?>";</script>
 	
@@ -44,6 +44,16 @@
 		<script src="<?php echo base_url('js/jquery.cookie.js')?>"></script>
 	<script src="<?php echo base_url('js/jquery.hotkeys.js')?>"></script>
 	
+	<!-- 表单验证   -->
+	<script src="<?php echo base_url('js/jquery.validate.js')?>"></script>
+	<script src='<?php echo base_url('js/bootstrap.js')?>'></script> 
+	
+	<!-- data table plugin -->
+	<script src="<?php echo base_url('js/jquery.dataTables.min.js') ?>"></script>
+	
+	<script src="<?php echo base_url('js/jquery-ui-timepicker-addon.js')?>"></script>
+	
+	<script src="<?php echo base_url('js/myscript.js') ?>"></script> 
 	<!-- The fav icon -->
 	<link rel="shortcut icon" href="<?php echo base_url('img/favicon.ico')?>">
 		

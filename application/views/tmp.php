@@ -25,8 +25,31 @@
 <script src="<?php echo base_url('js/bootstrap-typeahead.js') ?>"></script>
 <!-- tour library -->
 <script src="<?php echo base_url('js/bootstrap-tour.js') ?>"></script>
+/* AJAX 比對資料庫 */
+$.post("<?php echo base_url()?>controller_name/check_email_availablity", {
+	email: $('#email').val()
+}, function(response){
+	/* 驗證後讀取 reponse 狀態 */
+	$('#Loading').hide();
+	setTimeout("finishAjax('Loading', '"+escape(response)+"')", 400);
+});
 
-
+$('.form-horizontal').isHappy({
+	fields: {
+		'#inputEmail': {
+		required: true,
+		message: 'Please enter your email',
+		test:happy.email
+	},
+	'#inputPassword': {
+	required: true,
+	message: 'Please enter password',
+		
+	}
+	},
+	doHappy:function(){alert("happy");}
+});
+	
 <ul class="thumbnails gallery ">
 							<?php for($i=1;$i<=30;$i++) { ?>
 							<li id="image-<?php echo $i ?>" class="thumbnail">

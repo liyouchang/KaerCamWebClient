@@ -7,7 +7,7 @@ class Socket_model extends CI_Model {
 	 protected $socket;
 	 function __construct() {
 	 	parent::__construct();
-	 	$this->center_ip = "192.168.2.247";
+	 	$this->center_ip = "218.56.11.182";
 	 	$this->center_port=22616;
 	 }
 	 
@@ -48,7 +48,7 @@ class Socket_model extends CI_Model {
 	 }
 	 
 	 /**
-	  * 
+	  * @function connect to server
 	  * @throws Exception
 	  */
 	 public function connectServer()
@@ -59,14 +59,38 @@ class Socket_model extends CI_Model {
 	 	{
 	 		throw new Exception("socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
 	 	}
-	 	 
-	 	$connection = socket_connect($this->socket, $this->center_ip, $this->center_port);    //连接服务器端socket
-	 	if($connection === FALSE)
-	 	{
-	 		throw new Exception("socket_connect() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
-	 	}
 	 	socket_set_option($this->socket,SOL_SOCKET,SO_RCVTIMEO,array("sec"=>2, "usec"=>0 ) );
 	 	socket_set_option($this->socket,SOL_SOCKET,SO_SNDTIMEO,array("sec"=>3, "usec"=>0 ) );
+	 	
+	 	socket_set_nonblock($this->socket);
+	 	
+	 	$error = NULL;
+	 	$attempts = 0;
+	 	$timeout = 1000;  // adjust because we sleeping in 1 millisecond increments
+	 	$connected;
+	 	while (!($connected = @socket_connect($this->socket, $this->center_ip, $this->center_port)) && $attempts++ < $timeout) {
+	 		$error = socket_last_error();
+	 		if ($error != SOCKET_EINPROGRESS && $error != SOCKET_EALREADY) {
+	 			$errstr = "Error Connecting Socket: ".socket_strerror($error);
+	 			socket_close($this->socket);
+	 			throw new Exception($errstr);
+	 		}
+	 		usleep(1000);
+	 	}
+	 	if (!$connected) {
+	 		$errstr = "Error Connecting Socket: Connect Timed Out After $timeout seconds. ".socket_strerror(socket_last_error());
+	 		socket_close($this->socket);
+	 		throw new Exception($errstr);
+	 	}
+	 	
+	 	socket_set_block($this->socket);
+	 	
+	 	//下面的方法在连接失败时会等待很久
+	 	//$connection = socket_connect($this->socket, $this->center_ip, $this->center_port);    //连接服务器端socket
+	 	//if($connection === FALSE)
+	 	//{
+	 	//	throw new Exception("socket_connect() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
+	 	//}
 	 }
 	 /**
 	  * 登陆服务器
@@ -95,7 +119,7 @@ class Socket_model extends CI_Model {
 				
 		} catch (Exception $e) {
 			log_message('error',$e->getMessage());
-			var_dump($e->getMessage());
+			//var_dump($e->getMessage());
 			return "00";
 		}	
 
@@ -106,4 +130,5 @@ class Socket_model extends CI_Model {
 	 	return $outArray['respMsg']; 
 	 }
 	
+	 
 }

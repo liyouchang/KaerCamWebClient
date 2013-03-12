@@ -36,15 +36,9 @@
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 
-	<script src='<?php echo base_url('js/bootstrap.js')?>'></script> 
+
 	
-	<!-- data table plugin -->
-	<script src="<?php echo base_url('js/jquery.dataTables.min.js') ?>"></script>
-	
-	<script src="<?php echo base_url('js/jquery-ui-timepicker-addon.js')?>"></script>
-	
-	<script src="<?php echo base_url('js/myscript.js') ?>"></script> 
-	
+
 	
 	
 </body>
