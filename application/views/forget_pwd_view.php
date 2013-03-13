@@ -13,7 +13,6 @@ $(document).ready(function () {
 				required: true,
 				maxlength: 8
 			},
-
 			email: {
 				required: true,
 				email: true

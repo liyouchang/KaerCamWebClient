@@ -53,38 +53,30 @@ class Socket_model extends CI_Model {
 	  */
 	 public function connectServer()
 	 {
-	  	$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-	  	
+	  	$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 	 	if ($this->socket === FALSE )
 	 	{
 	 		throw new Exception("socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
 	 	}
-	 	socket_set_option($this->socket,SOL_SOCKET,SO_RCVTIMEO,array("sec"=>2, "usec"=>0 ) );
-	 	socket_set_option($this->socket,SOL_SOCKET,SO_SNDTIMEO,array("sec"=>3, "usec"=>0 ) );
 	 	
 	 	socket_set_nonblock($this->socket);
-	 	
-	 	$error = NULL;
-	 	$attempts = 0;
-	 	$timeout = 1000;  // adjust because we sleeping in 1 millisecond increments
-	 	$connected;
-	 	while (!($connected = @socket_connect($this->socket, $this->center_ip, $this->center_port)) && $attempts++ < $timeout) {
-	 		$error = socket_last_error();
-	 		if ($error != SOCKET_EINPROGRESS && $error != SOCKET_EALREADY) {
-	 			$errstr = "Error Connecting Socket: ".socket_strerror($error);
-	 			socket_close($this->socket);
-	 			throw new Exception($errstr);
-	 		}
-	 		usleep(1000);
-	 	}
-	 	if (!$connected) {
-	 		$errstr = "Error Connecting Socket: Connect Timed Out After $timeout seconds. ".socket_strerror(socket_last_error());
-	 		socket_close($this->socket);
-	 		throw new Exception($errstr);
-	 	}
-	 	
+	 	@socket_connect($this->socket,$this->center_ip, $this->center_port);
 	 	socket_set_block($this->socket);
-	 	
+	 	switch(socket_select($r = array($this->socket), $w = array($this->socket), $f = array($this->socket), 5))
+	 	{
+	 		case 2:
+	 			throw new Exception("[-] Connection Refused\n");
+	 			break;
+	 		case 1:
+	 			//echo "[+] Connected\n";
+	 			break;
+	 		case 0:
+	 			throw new Exception("[-] Timeout\n");
+	 			break;
+	 	}
+	 	 
+	 	socket_set_option($this->socket,SOL_SOCKET,SO_RCVTIMEO,array("sec"=>2, "usec"=>0 ) );
+	 	socket_set_option($this->socket,SOL_SOCKET,SO_SNDTIMEO,array("sec"=>3, "usec"=>0 ) );
 	 	//下面的方法在连接失败时会等待很久
 	 	//$connection = socket_connect($this->socket, $this->center_ip, $this->center_port);    //连接服务器端socket
 	 	//if($connection === FALSE)
@@ -118,7 +110,7 @@ class Socket_model extends CI_Model {
 			$outArray = unpack($this->respondMsgFromat['login'],$recvMsg);
 				
 		} catch (Exception $e) {
-			log_message('error',$e->getMessage());
+			//log_message('error',$e->getMessage());
 			//var_dump($e->getMessage());
 			return "00";
 		}	

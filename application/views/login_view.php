@@ -69,7 +69,7 @@ $(function () {
 						$.cookie('Password', null,{ expires: 7, path: '/' });
 					}
 					changeLoginInfo(data.errorDesc,"alert-success");
-					location.href = BASE_URL+"start/home";				
+					location.href = BASE_URL+"start/my_camera";				
 				}else {
 					changeLoginInfo(data.errorDesc,"alert-error");
 					$("#login-form input").attr('disabled', false);

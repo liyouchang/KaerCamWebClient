@@ -22,8 +22,8 @@
 			</div>
 		</div>
  		-->
-		<footer>
-			<p class="pull-left">&copy; <a href="http://www.kaer.cn/" target="_blank">山东卡尔电器股份有限公司</a> <?php echo date('Y') ?></p> 
+		<footer >
+			<!-- <p class="pull-left">&copy; <a href="http://www.kaer.cn/" target="_blank">山东卡尔电器股份有限公司</a> <?php echo date('Y') ?></p> --> 
 			<!-- <p class="pull-right">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p> -->
 			
 		</footer>
