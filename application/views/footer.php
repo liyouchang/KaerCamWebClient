@@ -36,6 +36,9 @@
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 
+<SCRIPT LANGUAGE=javascript FOR=player EVENT="ReportCameraStatus(info)">
+	CamStatusCheck(info);
+</SCRIPT>
 
 	
 

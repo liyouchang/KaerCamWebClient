@@ -57,7 +57,5 @@ class Login extends CI_Controller {
 	{
 		$data['title'] = '忘记密码';
 		$this->load->view('forget_pwd_view');
-		
 	}
-	
 }

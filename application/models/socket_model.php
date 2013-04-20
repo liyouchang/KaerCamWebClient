@@ -7,7 +7,9 @@ class Socket_model extends CI_Model {
 	 protected $socket;
 	 function __construct() {
 	 	parent::__construct();
-	 	$this->center_ip = "218.56.11.182";
+	 	//$this->center_ip = "218.56.11.182";
+	 	//$this->center_ip = "192.168.0.8";
+	 	$this->center_ip = "192.168.2.247";
 	 	$this->center_port=22616;
 	 }
 	 

@@ -51,7 +51,7 @@ class Start extends CI_Controller {
 	public function my_camera()
 	{
 		$this->data['title'] = '我的摄像机';
-		$this->load->view('my_camera_view',$this->data);
+		$this->load->view('home',$this->data);
 	}
 }
 

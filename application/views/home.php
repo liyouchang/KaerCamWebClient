@@ -17,7 +17,8 @@
 			</div>
 			
 			<div class=" row-fluid " >
-				<a data-rel="popover" class="well span3 top-block"  href="monitoring" data-content="进入本页面可以观看每个摄像头的实时视频画面，抓拍快照图片，进行录像，设置摄像头告警参数以及查看在线摄像头实时告警信息。" >
+				<a data-rel="popover" class="well span3 top-block"  href="monitoring" 
+				data-content="进入本页面可以观看每个摄像头的实时视频画面，抓拍快照图片，进行录像，设置摄像头告警参数以及查看在线摄像头实时告警信息。" >
 					<span class="icon32 icon-color icon-comment-video"></span>
 					<div>实时监控</div>
 				</a>

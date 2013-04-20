@@ -31,7 +31,7 @@ $(document).ready(function () {
 			myUserName: {
 				required: "请输入用户名",
 				maxlength:"用户名长度为8"
-							},
+			},
 			myPassword: {
 				required: "请输入密码",
 				maxlength:"密码最大长度为8"

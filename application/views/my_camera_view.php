@@ -73,54 +73,6 @@ function setDivMode(value)
 var login=false;
 //是否安装插件
 var hasplug=true;
-			
-//页面初始化插件对象,适合多浏览器支持
-function initObject1()
-{
-	var result=false;
-
-	 if($.browser.msie) {
-	      browseFlag = 1;
-	   }
-	   else if($.browser.safari)
-	   {
-	     browseFlag = 2;
-	    }
-	   else if($.browser.mozilla)
-	   {
-	      browseFlag = 2;
-	    }
-	   else if($.browser.opera)
-	     {
-	        browseFlag = 2;
-	    }
-	   else if($.browser.chrome)
-	     {
-	        browseFlag = 2;
-	    }
-	   else
-	   {
-	           browseFlag = 2 ;
-	      }
-	    //如果是ie
-	  if(browseFlag == 1)
-	  {
-  		$("#movie1").append("<OBJECT class='media' id='player' CLASSID=\"clsid:F4418F4B-4A6B-4A93-948F-332025F395E8\" width=100% height=100%></OBJECT>");
-  		//if(DetectActiveX())
-  	    //{
-  	      result=true;
-  	   // }else
-  	   // {
-  	  //    result=false;
-  	   // }
-	  }
-	  else
-	  {
-		  result=false;
-	  }
-  return result;
-}
-
 //登录播放插件
 function loginplug()
 {
@@ -139,7 +91,6 @@ function loginplug()
   	}
 }
 
-
 $(document).ready(function(){
 	if(initObject1())
 	{
@@ -150,6 +101,9 @@ $(document).ready(function(){
 		hasplug=false;
 		$("#infoText").text("监控插件未安装！");
 	}
+
+	$('#videoPannelClick').trigger("click");
+	
 	advancedOption();
 	$('.hidePlayer').click(function(){$('#player').hide();});
 	$('.showPlayer').click(function(){$('#player').show();});
@@ -161,7 +115,61 @@ $(document).ready(function(){
 		$('#shareCam').modal('hide');
 		
 	});
+	
+	$('#doDeleteCam').click(function(){
+		//执行删除		
+		noty({"text":"删除成功","layout":"bottomLeft","type":"success"});
+		$('#player').show();
+		$('#deleteCam').modal('hide');
+		 var anSelected = fnGetSelected( oTable );
+	     if ( anSelected.length !== 0 ) {
+	         oTable.fnDeleteRow( anSelected[0] );
+	     }
+	});
+	
+	$('#doAddCam').click(function(){
+		noty({"text":"添加成功","layout":"bottomLeft","type":"success"});
+		$('#player').show();
+		$('#addCam').modal('hide');
+		var action = '<a class="btn btn-primary" onclick="fnClickAddRow()">播放</a> '+
+		'<a href="#shareCam" role="button" class="btn btn-success hidePlayer" data-toggle="modal">分享</a> '+
+		'<a href="#cancelShareCam" data-toggle="modal"class="btn btn-warning hidePlayer">取消分享</a> '+
+		'<a href="#renameCam" data-toggle="modal" class="btn btn-warning hidePlayer">重命名</a> '+
+		'<a href="#deleteCam" data-toggle="modal" class="btn btn-danger"  >删除</a> ';
+		oTable.fnAddData( [
+       	 	giCount+".1",
+        	giCount+".2",
+        	action] );
+		 giCount++;
+
+		 
+		$("#camList tbody tr").click( function( e ) {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+    	});
+	});
+	
+	$("#camList tbody tr").click( function( e ) {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+    });
+	oTable = $('#camList').dataTable();
+
+	$(".playVedio").click(function(){
+		var player = document.getElementById("player");
+		
+		var out = player.QueryUserCamera();
+		alert(out);
+		var options = $.parseJSON(out);
+		alert(options.array[0].php);
+	});
 });
+
+/* Get the rows which are currently selected */
+function fnGetSelected( oTableLocal )
+{
+    return oTableLocal.$('tr.row_selected');
+}
 
 function DetectActiveX()
 {
@@ -199,6 +207,19 @@ function logout()
 // 关闭页面时，调登出接口
 $(window).unload( function () {logout(); } );
 
+var giCount=0;
+
+function fnClickAddRow() {
+	
+     
+    giCount++;
+    //ToDo: find another way to bind dynamic add object
+	$("#camList tbody tr").click( function( e ) {
+        oTable.$('tr.row_selected').removeClass('row_selected');
+        $(this).addClass('row_selected');
+	});
+}
+
 </script>
 
 <style type="text/css">
@@ -210,7 +231,7 @@ $(window).unload( function () {logout(); } );
 					<div class="box-header well" data-original-title>
 						<h2>视频窗口</h2>
 						<div class="box-icon">
-							<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a> 
+							<a href="#" id="videoPannelClick" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a> 
 						</div>
 					</div>
 					
@@ -381,9 +402,9 @@ $(window).unload( function () {logout(); } );
 					<div class="box-content">
 					
 						<a href="#addCam" data-toggle="modal" class="btn btn-info hidePlayer">添加摄像机</a>
-						
+
 						<h5>我的摄像机列表:</h5>
-						<table class="table table-bordered table-striped table-condensed">
+						<table id="camList" class="table table-bordered table-striped table-condensed bootstrap-datatable datatable">
 							  <thead>
 								  <tr>
 									  <th>镜头名称</th>
@@ -397,14 +418,15 @@ $(window).unload( function () {logout(); } );
 									<td >Kaer</td>
 									<td><span class="label label-success">在线</span></td>
 									<td >
-										<a class="btn btn-primary">播放</a>
+										<a class="btn btn-primary playVedio" >播放</a>
 										<a href="#shareCam" role="button" class="btn btn-success hidePlayer" data-toggle="modal">分享</a>
 										<a href="#cancelShareCam" data-toggle="modal"class="btn btn-warning hidePlayer">取消分享</a>
 										<a href="#renameCam" data-toggle="modal" class="btn btn-warning hidePlayer">重命名</a>
-										<a href="#deleteCam" data-toggle="modal" class="btn btn-danger hidePlayer" >删除</a>
+										<a id="deleteRow" class="btn btn-danger hidePlayer" >删除</a>
 									</td>	                               
 								</tr>
-							                               
+							 
+								                 
 							  </tbody>
 						 </table>  
 					</div>
@@ -440,7 +462,7 @@ $(window).unload( function () {logout(); } );
 			    <button type="button" class="close showPlayer" data-dismiss="modal" aria-hidden="true">×</button>
 			    <h3 id="addCamLabel">添加我的摄像机</h3>
 			  </div>
-			  <form  class="form-horizontal" action="#" id="addCamForm" >
+			  <form  class="form-horizontal"  id="addCamForm" >
 			  	<div class="modal-body">
 			  		<div class="alert alert-block"><p> 摄像机在线时才能添加</p></div>
 					<div class="control-group">
@@ -520,7 +542,7 @@ $(window).unload( function () {logout(); } );
 			  		<div class="alert alert-block alert-error fade in"><p> 你确定删除吗?</p></div>
 			  	</div>
 			  	<div class="modal-footer">			  
-			   		<button type="submit" class="btn btn-danger " id="doDeleteCam">确定</button>
+			   		<button class="btn btn-danger " id="doDeleteCam">确定</button>
 			    	<button class="btn btn-inverse showPlayer" data-dismiss="modal" aria-hidden="true">取消</button>			    
 			  	</div>
 			</div>

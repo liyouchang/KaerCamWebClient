@@ -112,6 +112,17 @@ function rememberPassword() {//页面加载完成之后执行自动登录检查
 	}
 }
 
+function SetCheck()
+{
+	if( $('#remember-long').attr('checked'))
+	{
+		$('#remember-long').attr('checked', false);
+	}
+	else
+	{
+		$('#remember-long').attr('checked', true);
+	}
+}
 
 //-->
 </script>
@@ -147,7 +158,7 @@ function rememberPassword() {//页面加载完成之后执行自动登录检查
 							</div>
 						
 							 <div class="control-group	">								
-									<label class="checkbox remember add-on"><input type="checkbox" class="" id="remember-long"  /> 记住密码   </label>
+									<label class="checkbox remember add-on"><input type="checkbox" class="" id="remember-long" onclick=SetCheck() /> 记住密码   </label>
 									<a href="<?php echo base_url('login/forget_pwd')?>" class="forgetPwd" style="disabled:true"> 忘记密码? </a> 
 							</div>
 						 	<input type="submit" class="btn btn-primary btn-login" value="登录"/> 

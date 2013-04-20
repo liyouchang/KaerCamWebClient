@@ -15,7 +15,7 @@
 
 	<link href='<?php echo base_url('css/jquery.noty.css') ?>' rel='stylesheet'>
 	<link href='<?php echo base_url('css/noty_theme_default.css') ?>' rel='stylesheet'>
-	
+	<!-- <link href='<?php echo base_url('css/jquery.dataTables.css') ?>' rel='stylesheet'> -->
 	<link href="<?php echo base_url('css/jquery-ui-1.10.1.custom.css')?>" rel="stylesheet">
 	<link href='<?php echo base_url('css/opa-icons.css')?>' rel='stylesheet'>
 	<link href='<?php echo base_url('css/jquery-ui-timepicker-addon.css') ?>' rel='stylesheet'>
@@ -47,7 +47,7 @@
 	<script src="<?php echo base_url('js/jquery-ui-1.10.1.custom.js')?>"></script>
 		<!-- zTree form -->
 	<script src="<?php echo base_url('js/jquery.ztree.core-3.5.js') ?>"></script> 
-		<script src="<?php echo base_url('js/jquery.cookie.js')?>"></script>
+	<script src="<?php echo base_url('js/jquery.cookie.js')?>"></script>
 	<script src="<?php echo base_url('js/jquery.hotkeys.js')?>"></script>
 	
 	<!-- 表单验证   -->
@@ -60,6 +60,7 @@
 	
 	<script src="<?php echo base_url('js/jquery-ui-timepicker-addon.js')?>"></script>
 	
+	<script src="<?php echo base_url('js/pluginCtrl.js') ?>"></script> 
 	<script src="<?php echo base_url('js/myscript.js') ?>"></script> 
 	<!-- The fav icon -->
 	<link rel="shortcut icon" href="<?php echo base_url('img/favicon.ico')?>">
@@ -108,8 +109,8 @@
 			<div class="span2 " style="margin-left: 0%;">
 				<div class=" well nav  nav-collapse sidebar-nav ">
 					<ul class=" nav nav-tabs nav-stacked main-menu ">
-					<!--
-						
+					
+						<li class=" nav-header hidden-tablet">主要功能</li>
 						<li ><a class="ajax-link" rel="home"><i class="icon-home"></i><span class="hidden-tablet"> 功能列表</span></a></li>
 						<li><a class="ajax-link" rel="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
 						<li><a class="ajax-link" rel="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
@@ -120,12 +121,7 @@
 						 <li><a class="" href="home"><i class="icon-user"></i><span class="hidden-tablet"> 账户设置</span></a></li> 
 						<li><a class="ajax-link" rel="sys_config"><i class="icon-cog"></i><span class="hidden-tablet"> 系统配置</span></a></li>
 						<li><a class="" href=<?php  echo base_url("login/logout")?> ><i class="icon-lock"></i><span class="hidden-tablet"> 退出系统</span></a></li>
-						-->
-						<li class=" nav-header hidden-tablet">操作</li>
-						<li class="active"><a class="ajax-link" rel="my_camera"><i class=icon-book></i><span class="hidden-tablet"> 我的摄像机</span></a></li>
-						<li><a class="ajax-link" rel="my_camera_view"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 分享给我的摄像机</span></a></li>
-						<li class=" nav-header hidden-tablet">其他</li>
-						<li><a class="" href=<?php  echo base_url("login/logout")?> ><i class="icon-lock"></i><span class="hidden-tablet"> 退出系统</span></a></li>
+						
 						
 					</ul>
 					 
