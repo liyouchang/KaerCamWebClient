@@ -26,111 +26,11 @@ function zTreeOnDblClick(event, treeId, treeNode) {
 };
 
 var zNodes = [ 
-               {id : 1,pId : 0,name : "江苏公安",open : true,iconSkin : "home"}, 
-               {id : 11,pId : 1,name : "威海食品",iconSkin : "home"},
-               {id : 111,pId : 11,name : "encoder1111111111",iconSkin : "encoder"}, 
-               {
-	id : 1112,
-	pId : 111,
-	name : "encoder1111111111",
-	iconSkin : "encoder"
-}, {
-	id : 11121,
-	pId : 1112,
-	name : "encoder1111111111",
-	iconSkin : "encoder"
-}, {
-	id : 111211,
-	pId : 11121,
-	name : "encoder1111111111",
-	iconSkin : "encoder"
-}, {
-	id : 1112111,
-	pId : 111211,
-	name : "encoder1111111111",
-	iconSkin : "encoder"
-}, {
-	id : 11121111,
-	pId : 1112111,
-	name : "encoder1111111dddffsdfs31231231231231231231231331213212111",
-	iconSkin : "encoder"
-}, {
-	id : 1111,
-	pId : 111,
-	name : "camera",
-	iconSkin : "camera"
-}, {
-	id : 39425,
-	pId : 11,
-	name : "大门高清",
-	iconSkin : "camera"
-}, {
-	id : 306945,
-	pId : 11,
-	name : "西安中心机房",
-	iconSkin : "camera"
-}, {
-	id : 12,
-	pId : 1,
-	name : "测试",
-	iconSkin : "home"
-}, {
-	id : 121,
-	pId : 12,
-	name : "测试1",
-	iconSkin : "home"
-}, {
-	id : 1211,
-	pId : 121,
-	name : "测试11",
-	iconSkin : "home"
-}, {
-	id : 12111,
-	pId : 1211,
-	name : "encoder11",
-	iconSkin : "encoder"
-}, {
-	id : 121111,
-	pId : 12111,
-	name : "camera1",
-	iconSkin : "camera"
-}, {
-	id : 121112,
-	pId : 12111,
-	name : "camera1",
-	iconSkin : "camera"
-}, {
-	id : 1212,
-	pId : 121,
-	name : "测试12",
-	iconSkin : "home"
-}, {
-	id : 12121,
-	pId : 1212,
-	name : "encoder1",
-	iconSkin : "encoder"
-}, {
-	id : 122,
-	pId : 12,
-	name : "encoder1",
-	iconSkin : "encoder"
-}, {
-	id : 1111,
-	pId : 111,
-	name : "camera1",
-	iconSkin : "camera"
-}, {
-	id : 112,
-	pId : 12,
-	name : "encoder2",
-	iconSkin : "encoderOffline"
-}, {
-	id : 182785,
-	pId : 11,
-	name : "西安测试",
-	iconSkin : "camera"
-},
-
+               {id : 1,pId : 0,name : "摄像头信息列表",open : true,iconSkin : "home"}, 
+ //              {id : 11,pId : 1,name : "威海食品",iconSkin : "home"},
+ //              {id : 39425,pId : 11,name : "大门高清",iconSkin : "camera"},
+  //             {id : 306945,pId : 11,name : "西安中心机房",iconSkin : "camera"},
+  //             {id : 182785,pId : 11,name : "西安测试",iconSkin : "camera"},
 ];
 
 var nodeList = [];
@@ -296,12 +196,10 @@ function initPlusgin() {
 	}
 	advancedOption();
 	
-	$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	//$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	$.fn.zTree.init($("#treeDemo"), setting, null);
 }
 
-$(document).ready(function() {
-	
-});
 
 function DetectActiveX() {
 	try {
@@ -635,6 +533,59 @@ function CamStatusCheck(info)
 		SetControlPTZ(0);
 		break;
 	}
+}
+function TreeStructAnalyze(info)
+{
+	//alert(info);
+	var statusObj = eval("(" + info + ")");
+	var NodeType = statusObj.NodeType;//0：工程；1:组；2：有线终端；
+	var NodeName = statusObj.NodeName;
+	var NodePID = statusObj.ParentNodeID;
+	var nodeID = statusObj.NodeID;
+	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+	var parentNode = treeObj.getNodeByParam("id", NodePID, null);
+	if(NodeType == 1|| NodeType == 0){
+		
+		var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "home"};
+				treeObj.addNodes(parentNode,newNode,true);
+	}
+	if(NodeType==2){
+		var online = statusObj.onLine;
+		var icon = (online==1)?"encoder":"encoderOffline";
+		var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : icon};
+		treeObj.addNodes(parentNode,newNode,true);
+	}
+	if(NodeType==3){
+		var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "camera"};
+		treeObj.addNodes(parentNode,newNode,true);		
+	}
+	/*
+	xmlDoc = loadXMLString(statusObj.XMLInfo);
+	x=xmlDoc.getElementsByTagName("Node");
+	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");	
+	for (var i=0;i<x.length;i++)
+  	{ 
+		var NodeType = x[i].getAttribute("NodeType");
+		var NodeName = x[i].getAttribute("Name");
+		var NodePID = x[i].getAttribute("ParentID");
+		var parentNode = treeObj.getNodeByParam("id", NodePID, null);
+		if(NodeType == 1){
+			var nodeID = x[i].getAttribute("ID");
+			var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "home"};
+			treeObj.addNodes(parentNode,newNode);
+		}
+		if(NodeType==2){
+			var nodeID = x[i].getAttribute("InforID");
+			var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "encoder"};
+			treeObj.addNodes(parentNode,newNode,true);
+			
+		}
+		if(NodeType==3){
+			var nodeID = x[i].getAttribute("ID")*1+ NodePID *256;
+			var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "camera"};
+			treeObj.addNodes(parentNode,newNode,true);		
+		}
+  	}*/
 }
 //全局变量
 var g_AutoYuntai = 0;

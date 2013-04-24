@@ -255,6 +255,7 @@ function docReady(){
 	});
 
 	initPlusgin();
+	
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server
 	var data = [], totalPoints = 300;
@@ -372,3 +373,69 @@ $.extend( $.fn.dataTableExt.oPagination, {
 		}
 	}
 });
+
+
+function loadXMLDoc(dname) 
+{
+
+try //Internet Explorer
+  {
+  xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+  }
+catch(e)
+  {
+  try //Firefox, Mozilla, Opera, etc.
+    {
+    xmlDoc=document.implementation.createDocument("","",null);
+    }
+  catch(e) {alert(e.message);}
+  }
+try 
+  {
+  xmlDoc.async=false;
+  xmlDoc.load(dname);
+  return(xmlDoc);
+  }
+catch(e) {alert(e.message);}
+return(null);
+}
+
+function loadXMLString(text){
+	try {//Internet Explorer
+	  xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+	  xmlDoc.async="false";
+	  xmlDoc.loadXML(text);
+	  
+	  }
+	catch(e){
+	  try {//Firefox, Mozilla, Opera, etc.
+	    parser=new DOMParser();
+	    xmlDoc=parser.parseFromString(text,"text/xml");
+	    }
+	  catch(e) {
+		  alert(e.message);
+		  return (null);
+		  }
+	  }
+	return (xmlDoc);
+	
+}
+function get_nextSibling(n)
+{
+	y=n.nextSibling;
+	while (y.nodeType!=1)
+	  {
+	  y=y.nextSibling;
+	  }
+	return y;
+}
+function get_firstChild(n)
+{
+y=n.firstChild;
+while (y.nodeType!=1)
+  {
+  y=y.nextSibling;
+  }
+return y;
+}
+

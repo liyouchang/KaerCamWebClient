@@ -4,7 +4,7 @@ class Login extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->data['pluginFilePath'] = base_url("plugin/VideoMonitorV1.00.20.msi");
+		$this->data['pluginFilePath'] = base_url("plugin/WebCamClientSetup.msi");
 	}
 	public $data = array("title"=> '登录');
 	public function index()

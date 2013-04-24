@@ -40,7 +40,10 @@
 	CamStatusCheck(info);
 </SCRIPT>
 
-	
+<SCRIPT LANGUAGE=javascript FOR=player EVENT="TreeStructNotify(info)">
+	TreeStructAnalyze(info);
+</SCRIPT>
+
 
 	
 	
