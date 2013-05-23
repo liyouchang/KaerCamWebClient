@@ -1,9 +1,8 @@
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
 			</div><!-- content-inner ends -->
-			<!-- content ends -->
-			</div><!--/#content.span10-->
+		</div><!--/#content end-->
 		<?php } ?>
-		</div><!--/fluid-row-->
+		<!-- </div> --><!-- container end -->
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
 		
 		<hr>
@@ -32,10 +31,59 @@
 	
 	</div><!--/.fluid-container-->
 
+	
 	<!-- external javascript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
+	
+	<!-- jQuery -->
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+    <script>window.jQuery || document.write('<script src="<?php echo base_url('js/vendor/jquery-1.9.1.js')?>"><\/script>')</script>
+   
+	<script src="<?php echo base_url('js/vendor/jquery.mb.browser.js')?>"></script>
+	<!-- jQuery UI -->
+	<script src="<?php echo base_url('js/vendor/jquery-ui-1.10.0.custom.min.js')?>"></script>
+		<!-- zTree form -->
+	<script src="<?php echo base_url('js/vendor/jquery.ztree.core-3.5.js') ?>"></script> 
+	<script src="<?php echo base_url('js/vendor/jquery.cookie.js')?>"></script>
+	
+	<script src="<?php echo base_url('js/vendor/json2.js')?>"></script>
+	
+	<script src="<?php echo base_url('js/jquery.hotkeys.js')?>"></script>
+	
+	<!-- 表单验证   -->
+	<script src="<?php echo base_url('js/vendor/jquery.validate.js')?>"></script>
+	
+	
+	<script src="<?php echo base_url('js/jquery.noty.js') ?>"></script>
+	<!-- data table plugin -->
+	<script src="<?php echo base_url('js/jquery.dataTables.min.js') ?>"></script>
+	
+	<script src="<?php echo base_url('js/jquery-ui-timepicker-addon.js')?>"></script>
+	
+	
+	
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 
+	<!--[if lte IE 6]>
+		<script type="text/javascript" src="<?php echo base_url('js/vendor/css3-mediaqueries.js') ?>" ></script>
+		<script type="text/javascript" src="<?php echo base_url('js/vendor/bootstrap-ie.js')?>"></script>
+	<![endif]-->
+	
+	
+	<script src='<?php echo base_url('js/vendor/bootstrap.js')?>'></script> 
+	<script src='<?php echo base_url('js/vendor/messenger.js')?>'></script> 
+	
+	<script src='<?php echo base_url('js/vendor/underscore-1.4.4.js')?>'></script> 
+	<!-- backbone need underscore -->
+	<script src='<?php echo base_url('js/vendor/backbone.js')?>'></script> 
+	<script src="<?php echo base_url('js/plugins.js')?>"></script>
+    <script src="<?php echo base_url('js/main.js')?>"></script>
+	<script src="<?php echo base_url('js/pluginCtrl.js') ?>"></script> 
+	
 <SCRIPT LANGUAGE=javascript FOR=player EVENT="ReportCameraStatus(info)">
 	CamStatusCheck(info);
 </SCRIPT>

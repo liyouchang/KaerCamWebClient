@@ -6,9 +6,11 @@ class Start extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		if (!$this->session->userdata('name')) {
+			log_message('error', 'login failed!');				
 			header('Location: '.base_url().'login');
 		}
 		$this->data['userName'] = $this->session->userdata('name');
+		$this->data['centerSvrIp']=$this->config->item('center_server_ip');
 	}
 	public $data ;
 	 
@@ -50,7 +52,7 @@ class Start extends CI_Controller {
 	}
 	public function my_camera()
 	{
-		$this->data['title'] = '我的摄像机';
+		$this->data['title'] = '我的摄像机';		
 		$this->load->view('home',$this->data);
 	}
 }

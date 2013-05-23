@@ -125,12 +125,12 @@ box-shadow: 0 0 10px rgba(189, 189, 189, 0.4);
 
 .box-header{
 border:none;
-padding-top:5px;
-border-bottom: 1px solid #DEDEDE;
+padding-top:1px;
+border-bottom: 1px solid rgb(153, 0, 0);
 border-radius:3px 3px 0 0;
 -webkit-border-radius:3px 3px 0 0;
 -moz-border-radius:3px 3px 0 0;
-height:12px;
+height:22px;
 min-height:12px;
 margin-bottom: 0;
 cursor:auto;
@@ -303,7 +303,7 @@ display: block;
 margin-bottom: 9px;
 }
 
-div.center,p.center,img.center{
+div.center,p.center,img.center,form.center{
 margin-left: auto !important;
 margin-right: auto !important;
 float:none !important;
@@ -488,9 +488,9 @@ box-shadow: 0 0 10px #BDBDBD;
 .box-content.buttons{
 min-height:297px;
 }
-
+/*
 #main-navbar .navbar-inner {
-background: #418ce4;
+background: #000000;
 border-bottom: 1px solid #185aa7;
 -webkit-box-shadow: rgba(255,255,255,0.25) 0 1px 0 inset;
 -moz-box-shadow: rgba(255,255,255,0.25) 0 1px 0 inset;
@@ -504,7 +504,7 @@ background-image: linear-gradient(to bottom,#52aded,#418ce4);
 background-repeat: repeat-x;
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff52aded',endColorstr='#ff418ce4',GradientType=0);
 }
-
+*/
 
 #main-navbar .messages, #main-navbar .usermenu, #main-navbar .logo {
 color: #fff;
@@ -514,6 +514,11 @@ text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
 .ajax-link {
 	cursor:pointer;
 }
+
+
+
+
+
 
 
 /* Responsive

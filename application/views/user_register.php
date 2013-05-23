@@ -3,54 +3,6 @@
 $no_visible_elements=true;
 include('header.php');
 ?>
-<script type="text/javascript">
-
-$(document).ready(function () {
-	$("#register-form").validate({
-		rules: {
-			myUserName: {
-				required: true,
-				maxlength: 8
-			},
-			myPassword: {
-				required: true,
-				maxlength: 8
-			},
-			confirm_password: {
-				required: true,
-				equalTo: "#myPassword"
-			},
-			email: {
-				required: true,
-				email: true
-			},
-				
-			agree: "required"
-		},
-		messages: {
-			myUserName: {
-				required: "请输入用户名",
-				maxlength:"用户名长度为8"
-			},
-			myPassword: {
-				required: "请输入密码",
-				maxlength:"密码最大长度为8"
-			},
-			confirm_password: {
-				required: "请输入确认密码",
-				equalTo: "确认密码与密码需一致"
-			},
-			
-			email: "请输入正确的email地址",
-			agree: "需要同意用户协议"
-		},
-		submitHandler: function(){  alert("submit");}
-		
-	});
-});
-
-	
-</script>
 
 
 			<div class="row-fluid">
@@ -59,19 +11,17 @@ $(document).ready(function () {
 					<h2>用户注册</h2>
 				</div><!--/span-->
 			</div><!--/row-->
-			
-			<div class="row-fluid">
+				<div class="row-fluid">
 				<div class="span3"></div>
 				<div class="well span6  ">
-		
 					<!-- <form class="form-inline " id="login-form" action="#" method="post"> -->
 					<form  class="form-horizontal" id="register-form" >
-					 
+					
 					   <div class="control-group">
-					    <label class="control-label" for="myUserName">用户名</label>
-					    <div class="controls">
-					      <input type="text" name="myUserName" id="myUserName" value="" placeholder="使用数字、字母及下划线">
-					    </div>
+					   <label class="control-label" for="myUserName">用户名</label>
+					   <div class="controls">
+					   	<input type="text" name="myUserName" id="myUserName" value="" placeholder="使用数字、字母及下划线">
+					   </div>
 					  </div>
 					  <div class="control-group">
 					    <label class="control-label" for="myPassword">密码</label>
@@ -96,12 +46,20 @@ $(document).ready(function () {
 					  <div class="control-group">
 					    <div class="controls">
 					      <label id="agree"  class="checkbox"><input name="agree" type="checkbox"> 我同意<a href="login">用户协议</a></label>
-					    </div>
+					   	</div>
 					   </div>
+					    
+					   <div class="control-group" id="xcode_group" style="display:none">
+					    <label class="control-label" for="xcode">验证码</label>
+					    <div class="controls">
+					      <input type="text" id="xcode" name="xcode" placeholder="请输入您收到的验证码,验证码10分钟内有效">
+					    </div>
+					  </div> 
+					  
 					    <div class="control-group">
 					    <div class="controls">
-					    	  <button type="submit" class="btn span3 btn-primary">注册</button>
-					      <a href=<?php echo base_url('login')?> class="btn span3">返回登陆</a>
+					    	<input id="register_btn" type="submit" class="btn  btn-primary span4 pull-left" value="获取验证码">
+					      	<a href=<?php echo base_url('login')?> class="btn span4">返回登陆</a>
 						</div>
 					    </div>
 					
@@ -116,3 +74,85 @@ $(document).ready(function () {
 
 
 <?php include('footer.php'); ?>
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+	$("#register-form").validate({
+		rules: {
+			myUserName: {
+				required: true,
+				maxlength: 20,
+				minlength:3
+			},
+			myPassword: {
+				required: true,
+				maxlength: 20,
+				minlength:6
+			},
+			confirm_password: {
+				required: true,
+				equalTo: "#myPassword"
+			},
+			email: {
+				required: true,
+				email: true
+			},
+			xcode: "required",
+			agree: "required"
+		},
+		messages: {
+			myUserName: {
+				required: "请输入用户名",
+				maxlength:"用户名最大长度为20",
+				minlength:"用户名最短长度为3"
+			},
+			myPassword: {
+				required: "请输入密码",
+				maxlength:"密码最大长度为20",
+				minlength:"密码最短长度为6"
+			},
+			confirm_password: {
+				required: "请输入确认密码",
+				equalTo: "确认密码与密码需一致"
+			},
+			email: "请输入正确的email地址",
+			agree: "需要同意用户协议",
+			xcode:"需要输入验证码"
+		},
+		submitHandler: function(){  
+			var params = {user_name:$("#myUserName").val() ,user_pwd:$("#myPassword").val(),
+					reg_email:$("#email").val(),reg_code:$("#xcode").val()};
+			//alert(JSON.stringify(params));
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL+'command/user_register',
+				dataType: 'json',
+				data:params,
+				success: function (data) {
+					if (data.errorCode == "0d") {
+						alert(data.errorDesc);
+						location.href = BASE_URL+"start/my_camera";				
+					}else if(data.errorCode=='08')
+					{
+						$("#register_btn").val("注册");
+						$("#xcode_group").css('display','block');
+					}
+					else
+					{
+						alert(data.errorDesc);
+					}
+				},
+				error: function () {
+					alert("失败");
+				}
+			});
+
+		}
+		
+	});
+});
+
+	
+</script>
+

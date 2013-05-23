@@ -4,22 +4,25 @@ class Socket_model extends CI_Model {
 
 	 public $center_ip ;
 	 public $center_port;
+
 	 protected $socket;
 	 function __construct() {
 	 	parent::__construct();
 	 	//$this->center_ip = "218.56.11.182";
 	 	//$this->center_ip = "192.168.0.8";
-	 	$this->center_ip = "192.168.2.247";
+	 	$this->center_ip = $this->config->item('center_server_ip');
 	 	$this->center_port=22616;
 	 }
 	 
 	 protected $requestMsgFromat = array(
 	 		 "setcretKey"=>"H4II",
-	 		"login"=>"H4IIIa8a8a16"
+	 		"login"=>"H4IIIa8a8a16",
+	 		"heartbeat"=>"H4IIC"
 	 		);
 	 protected $respondMsgFromat = array(
 	 		"setcretKey"=>"H4head/Ilen/IclientID/a8secretKey",
-	 		"login"=>"H4head/Ilen/IclientID/IuserLevel/H2respMsg"
+	 		"login"=>"H4head/Ilen/IclientID/IuserLevel/H2respMsg",
+	 		"heartbeat"=>"H4head/Ilen/IclientID/H2respMsg"
 	 );
 	 
 	 /**
@@ -29,14 +32,16 @@ class Socket_model extends CI_Model {
 	  * @param number $readLen
 	  * return the read string
 	  */
-	 public function writeAndRead($writeStr,$readLen=1024)
+	 public function writeAndRead($writeStr,$readLen=2048)
 	 {
-	 	$sent = socket_write($this->socket, $writeStr);
+	 	//$sent = socket_write($this->socket, $writeStr);
+	 	$sent = fwrite($this->socket, $writeStr);
 	 	if($sent === FALSE)
 	 	{
 	 		throw new Exception("socket_write() failed: reason: " . socket_strerror(socket_last_error()));
 	 	}
-	 	$out = socket_read($this->socket, $readLen);
+	 	//$out = socket_read($this->socket, $readLen);
+	 	$out = fread($this->socket, $readLen);
 	 	if($out === FALSE)
 	 	{
 	 		throw new Exception("socket_read() failed: reason: " . socket_strerror(socket_last_error()));
@@ -60,6 +65,9 @@ class Socket_model extends CI_Model {
 	 	{
 	 		throw new Exception("socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
 	 	}
+	 	
+	 	
+	 	
 	 	
 	 	socket_set_nonblock($this->socket);
 	 	@socket_connect($this->socket,$this->center_ip, $this->center_port);
@@ -85,6 +93,29 @@ class Socket_model extends CI_Model {
 	 	//{
 	 	//	throw new Exception("socket_connect() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
 	 	//}
+	 	$this->session->set_userdata(array('socket'=>$this->socket));
+	 	
+	 	
+	 }
+	 public function PConnectServer()
+	 {
+	 	$this->socket = stream_socket_client("tcp://$this->center_ip:$this->center_port", 
+	 			$errno, $errstr,30,STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT);
+	 	//$this->socket = pfsockopen("tcp://$this->center_ip",$this->center_port, $errno, $errstr);
+	 	if (!$this->socket )
+	 	{
+	 		throw new Exception("fsockopen() failed: reason: $errstr ($errno)\n");
+	 	}
+	 	stream_set_timeout($this->socket,3);
+	 	
+	 	$this->session->set_userdata(array('socket'=>$this->socket));
+	 	
+	 }
+	 public function PCloseServer()
+	 {
+	 	$this->socket = stream_socket_client("tcp://$this->center_ip:$this->center_port",
+	 			$errno, $errstr,30,STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT);
+	 	fclose($this->socket);
 	 }
 	 /**
 	  * 登陆服务器
@@ -95,8 +126,9 @@ class Socket_model extends CI_Model {
 	 public function login($userName,$passWord)
 	 {	
 		try {
-				
-			$this->connectServer();
+			$this->PCloseServer();
+			$this->PConnectServer();
+			//$this->connectServer();
 			$sendMsg = pack($this->requestMsgFromat['setcretKey'],"FFD0","10","0");				
 			$recvMsg = $this->writeAndRead($sendMsg);
 			$outArray = unpack($this->respondMsgFromat['setcretKey'],$recvMsg);
@@ -111,17 +143,48 @@ class Socket_model extends CI_Model {
 			$recvMsg =  $this->writeAndRead($sendMsg);
 			$outArray = unpack($this->respondMsgFromat['login'],$recvMsg);
 				
+			$this->session->set_userdata(array('clientID'=>$outArray['clientID']));
+			
+			$client_id = $this->session->userdata('clientID');
+			
+			$sendMsg = pack($this->requestMsgFromat['heartbeat'],"FF82","11",$client_id,"0");
+			$recvMsg = $this->writeAndRead($sendMsg);
+			
 		} catch (Exception $e) {
-			//log_message('error',$e->getMessage());
+			log_message('error',$e->getMessage());
 			//var_dump($e->getMessage());
 			return "00";
 		}	
-
-		
 	 //	var_dump($outArray);
-	 	socket_close($this->socket);
+	 	//socket_close($this->socket);
+	 	//fclose($this->socket);
 	 	
 	 	return $outArray['respMsg']; 
+	 }
+	 public function HeartBeat()
+	 {
+	 	try {
+	 		//$this->socket = $client_id = $this->session->userdata('socket');
+	 		$this->PConnectServer();
+	 			 		
+	 		$client_id = $this->session->userdata('clientID');
+	 			 		
+	 		$sendMsg = pack($this->requestMsgFromat['heartbeat'],"FF82","11",$client_id,"0");
+	 		$recvMsg = $this->writeAndRead($sendMsg);
+	 		$outArray = unpack($this->respondMsgFromat['heartbeat'],$recvMsg);
+	 		//获取 密钥
+	 		$respMsg = $outArray['respMsg'];
+	 		
+	 	} catch (Exception $e) {
+	 		log_message('error',$e->getMessage());
+	 		//var_dump($e->getMessage());
+	 		return "00";
+	 	}
+	 	//	var_dump($outArray);
+	 	//socket_close($this->socket);
+	 	 
+	 	return $respMsg;
+	 	
 	 }
 	
 	 

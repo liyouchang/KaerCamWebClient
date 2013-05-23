@@ -2,18 +2,7 @@
 
 <script type="text/javascript">
 
-function DetectActiveX()
-{
-	   try
-	   {
-	      var comActiveX = new ActiveXObject("Ke2008WebProj1.Ke2008Web");   
-	   }
-	   catch(e)
-	   {
-		      return false;
-	   }
-	    return true;
-}
+
 
 //退出时先注销插件
 function logout()
@@ -36,13 +25,10 @@ function logout()
 }
 
 // 关闭页面时，调登出接口
-$(window).unload( function () {logout(); } );
+//$(window).unload( function () {logout(); } );
 
 </script>
 
-<style type="text/css">
-
-</style>
 
 <!-- 
 			<div>
@@ -56,8 +42,8 @@ $(window).unload( function () {logout(); } );
 				</ul>
 			</div>
 -->
-			<div class="row-fluid ">	
-				<div class="box span9">
+			<div class="row">	
+				<div class="box span8">
 					<div class="box-header well" data-original-title>
 						<h2>视频窗口</h2>
 						<div class="box-icon">
@@ -65,14 +51,16 @@ $(window).unload( function () {logout(); } );
 						</div>
 					</div>
 					
-					<div class="box-content span11">
+					<div class="box-content ">
 						 
 							<!--插件、及云台信息开始-->
 							<!-- 插件定义开始 -->
-							<div id="movie1" class="center" style="WIDTH: 750px; HEIGHT: 500px;"></div> 
+							<div id="movie1" class="center">
+							
+							</div> 
 							<!-- 插件定义结束 -->		
 												
-							<div id="" class=" box " >
+							<div id="camCtl" class=" box center" >
 								<!-- 控制更多操作开始 -->
 								<div class="controlH clearfix">
 									<a class="btn btn-small" id="hidemore" onClick="javascript:advancedOption()">
@@ -86,9 +74,8 @@ $(window).unload( function () {logout(); } );
 										<span class="screen8" onClick="javascript:setDivMode(8)" ></span>
 									</div>
 									<span class="pull-right " style="margin-right:5px">
-										
-									<i class="icon-exclamation-sign "></i><span id="infoText" class="label label-info">
-									操作成功</span>
+									<i class="icon-exclamation-sign "></i>
+									<span id="infoText" class="label label-info">操作成功</span>
 									</span>
 									<!-- 表格提示  -->
 								</div>
@@ -173,16 +160,16 @@ $(window).unload( function () {logout(); } );
 									<!--语音、通信控制开始  -->
 									<div class="pControl3">
 										<div class="pControl3-g1 clearfix">
-											<span class="ptext label">广播</span>
+											<span class="ptext label">监听</span>
 											<a href="#PP" id="linkboardo" class="iconLay"> 
-												<span title='广播' id='boardopen' class="board_open"></span>
+												<span title='开始监听' id='boardopen' class="board_open"></span>
 											</a>
 											<a href="#PP" id="linkboardc" class="iconLay">
-												<span title='停止广播' id='boardclose' class="board_close"></span>
+												<span title='停止监听' id='boardclose' class="board_close"></span>
 											</a>
 										</div>
 										<div class="pControl3-g2 clearfix">
-											<span class="ptext label">通讯</span>
+											<span class="ptext label">通话</span>
 											<a href="#PP" id="linktelo" class="iconLay">
 												<span title='开始通话' id='telopen' class="tel_open"></span>
 											</a>
@@ -211,33 +198,381 @@ $(window).unload( function () {logout(); } );
 							  <!--云台区域信息结束 -->
 							</div>
 							<!--插件、及云台信息结束-->
-					
 					</div>
 				</div><!--/span-->
 				
-				<div class="box span3" style="margin-left: 1.07%">
+				<div class="box span4" style="margin-left: 1.07%">
 					<div class="box-header well" data-original-title>
 						<h2><i class=""></i> 摄像头信息表</h2>
-						<div class="box-icon">
-							<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
-						</div>
 					</div>
-					<div class="box-content">
-					
-						<div class="form-search " style="width:220px" >
-  							<input type="text" id="camKey" class=" search-query input-small " placeholder="镜头名称" />
+					<div class="box-content" ">					
+						<div class="form-search " style="width:100%" >
+  							<input type="text" id="camKey" class=" search-query input-small pull-left" placeholder="镜头名称" />
  							<button type="button" class="btn " onclick="searchCamera()"><i class="icon-search"></i>查找</button>
+ 							<button type="button" class="btn " onclick="DevRefresh()"><i class="icon-refresh"></i>刷新</button>
+							<a class="btn btn-info" href="#model_addCam" data-toggle="modal" data-backdrop="static"><i class="icon-plus"></i>添加</a> 						
 						</div>
-						
 						<div class="zTreeBackground ">
 							<ul id="treeDemo" class="ztree"></ul>
 						</div>
 					</div>
 				</div><!--/span-->
 			</div><!--/row-->
+			<div id="rMenu" >
+				<div class='arrow-left'></div>
+			       <ul id="menu">
+			         <!-- <li id="m_AddCam"><a href="#model_addCam" data-toggle="modal" data-backdrop="static">添加摄像头</a></li> -->
+                     <li id="m_RTVideo"><a href="#" onclick="StartRTVideo(g_cameraID)">实时视频</a></li>
+                     <li id="m_ShrCam"><a href="#model_shrCam" data-toggle="modal">分享摄像头</a></li>
+                     <li id="m_SetRecord"><a href="#model_SetRecord" data-toggle="modal">设置终端录像</a></li>
+                     <li id="m_DelShrDev"><a href="#model_cancelShare"  data-toggle="modal">删除分享</a></li>
+                     <li id="m_DelDev"><a href="#model_delCam" data-toggle="modal">删除摄像头</a></li>
+                    </ul>
+             </div>		
+			
+             <!-- Modal  -->
+			<div id="model_addCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">添加设备</h3>
+			  </div>
+			  <div class="modal-body">
+			    <form id="form_addCam" class="form-horizontal">
+  					<div class="control-group">
+    					<label class="control-label" for="addDeviceID">设备ID</label>
+    					<div class="controls">
+      					<input type="text" name="addDeviceID" id="addDeviceID" placeholder="设备ID">
+    					</div>
+  					</div>
+					  <div class="control-group">
+					    <label class="control-label" for="addDeviceName">设备名称</label>
+					    <div class="controls">
+					      <input type="text" name="addDeviceName" id="addDeviceName" placeholder="镜头名称">
+					    </div>
+					  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-danger"  onclick="AddCamera()">确定</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			</div>
+             <!-- Modal 删除摄像头 -->
+			<div id="model_delCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">删除设备</h3>
+			  </div>
+			  <div class="modal-body">
+			  	<div id='modal_alert' class='alert alert-info'>
+					<p>你确定要删除设备？</p>
+				</div>
+			  
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-danger" data-dismiss="modal" onclick="DelCamera()">确定</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			</div>
+			
+			<!-- Shr Cam Modal  -->
+			<div id="model_shrCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">分享设备</h3>
+			  </div>
+			  <div class="modal-body">
+			    <form id="form_shrCam" class="form-horizontal">
+					  <div class="control-group">
+					    <label class="control-label" for="shr_user_name">分享用户</label>
+					    <div class="controls">
+					      <input type="text" name="shr_user_name" id="shr_user_name" placeholder="用户名称">
+					    </div>
+					  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-primary"  onclick="ShrCamera()">确定</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			</div>
 			
 			
-
+			    <!-- Modal 取消分享 -->
+			<div id="model_cancelShare" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">取消分享</h3>
+			  </div>
+			  <div class="modal-body">
+			  	<div id='alert-message' class='alert alert-info'>
+			  		选择删除分享的用户
+				</div>
+			  	<div id='modal_cancelShr_alert' class='alert alert-block'>
+			  		
+				</div>
+			  	
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-danger" onclick="CancelShare()">确定</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			</div>
 			
-    
+			    <!-- Modal 设置终端录像  -->
+			<div id="model_SetRecord" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">设置终端录像 </h3>
+			  </div>
+			  <div class="modal-body">
+			    <form id="form_SetRecord" class="form-horizontal">
+  					<div class="control-group">
+    					<label class="control-label" for="addDeviceID">设备ID</label>
+    					<div class="controls">
+      					<input type="text" name="addDeviceID" id="addDeviceID" placeholder="设备ID">
+    					</div>
+  					</div>
+					  <div class="control-group">
+					 	<div class="controls">
+					    <label class="checkbox inline">
+						  <input type="checkbox" id="inlineCheckbox1" value="option1"> 录像
+						</label>
+						<label class="checkbox inline">
+						  <input type="checkbox" id="inlineCheckbox2" value="option2"> 抓拍
+						</label>
+					  </div>
+					  	</div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-primary"  onclick="AddCamera()">设置</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			 </div> 
 <?php include('footer.php'); ?>
+
+<script type="text/javascript">
+<!--
+
+$(function () {
+	$("#menu-monitoring").addClass("active");
+	$("#form_addCam").validate({
+		rules: {
+			addDeviceID: {required: true},
+			addDeviceName: {required: true}
+		},
+		messages: {
+			addDeviceID: {required: "请输入设备ID"},
+			addDeviceName: {required: "请设置设备名称"}
+		}
+	});
+	$("#form_shrCam").validate({
+		rules: {shr_user_name:"required"},
+		messages: {shr_user_name:"请输入分享用户名称"}
+	});
+	$('.modal').on('hidden', function () {
+		$(".alert_add").alert("close");
+		$("#player").show();
+	});
+	$('.modal').on('show', function () {
+		$("#player").hide();
+		
+	});
+	$('#model_cancelShare').on('shown',function(){
+		GetShrUser();
+	});
+	DevRefresh();
+	
+});
+
+function GetShrUser(){
+	$("#modal_cancelShr_alert").empty();
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/check_share_user',
+		dataType: 'json',
+		data:{dev_id:g_selectTreeNode.id},
+		success: function (data) {
+			//alert(data);
+			xmlDoc = loadXMLString(data);
+			x=xmlDoc.getElementsByTagName("Info");
+			for (var i=0;i<x.length;i++)
+		  	{ 
+				var devID = x[i].getAttribute("D");
+				var userID = x[i].getAttribute("U");
+				var userName = x[i].getAttribute("N");
+				$("#modal_cancelShr_alert").append(
+					"<label class='checkbox checkbox_add ' devID="+devID+
+					" UserID="+userID+"><input type='checkbox'onchange='toggleCheckbox(this)'>"+
+					userName+"</label>"
+				);
+		  	}
+		},
+		error: function () {
+			AlertMessage("获取设备共享用户"+"操作失败","error");
+		}
+	});	
+}
+
+function CancelShare(){
+	$("#modal_cancelShr_alert .checkbox_add").each(function(){
+		if($(this).children(":checkbox").attr("checked")){
+			var userName = $(this).text();
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL+'command/cancel_share',
+				dataType: 'json',
+				data:{dev_id:$(this).attr("devID"),shr_user:$(this).attr("UserID")},
+				success: function (data) {
+					if (data.errorCode == "0d") {
+						AlertMessage("删除共享用户"+userName+data.errorDesc,"success");			
+					}
+					else
+					{
+						AlertMessage("删除共享用户"+userName+"失败："+data.errorDesc,"error");			
+					}
+				},
+				error: function () {
+					AlertMessage("删除共享用户"+userName+"操作失败","error");
+				}
+			});	
+			//alert($(this).attr("devID"));
+		}
+	  });
+}
+function AddCamera(){
+	//ModalPrependInfo("","alert-info");
+	var valid = $("#form_addCam").valid();
+	if(valid){
+		//$('#model_addCam').modal('hide');
+		var params = {cam_id:$("#addDeviceID").val() ,device_name:$("#addDeviceName").val()};
+		$.ajax({
+			type: 'POST',
+			url: BASE_URL+'command/add_camera',
+			dataType: 'json',
+			data:params,
+			success: function (data) {
+				if (data.errorCode == "0d") {
+					ModalPrependInfo(data.errorDesc,"alert-success");			
+				}
+				else
+				{
+					ModalPrependInfo(data.errorDesc,"alert-error");
+				}
+			},
+			error: function () {
+				ModalPrependInfo("操作失败","alert-error");
+			}
+		});
+	}	
+	
+};
+
+function ShrCamera(){
+	//ModalPrependInfo("","alert-info");
+	var valid = $("#form_shrCam").valid();
+	if(valid){
+		//$('#model_addCam').modal('hide');
+		var params = {user_name:$("#shr_user_name").val() ,cam_id:g_selectTreeNode.id};
+		$.ajax({
+			type: 'POST',
+			url: BASE_URL+'command/shr_camera',
+			dataType: 'json',
+			data:params,
+			success: function (data) {
+				if (data.errorCode == "0d") {
+					ModalPrependInfo(data.errorDesc,"alert-success");			
+				}
+				else
+				{
+					ModalPrependInfo(data.errorDesc,"alert-error");
+				}
+			},
+			error: function () {
+				ModalPrependInfo("操作失败","alert-error");
+			}
+		});
+	}	
+	
+};
+
+function DelCamera(type)
+{
+	//alert("deleted");
+	var type;
+	if(g_selectTreeNode.pId == OwnListTreeID){
+		type = 12;
+	}
+	if(g_selectTreeNode.pId == ShrListTreeID){
+		type = 13;
+	}
+	var params = {cam_id:g_selectTreeNode.id,del_type:type};
+	//alert(JSON.stringify(params));
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/del_camera',
+		dataType: 'json',
+		data:params,
+		success: function (data) {
+			if (data.errorCode == "0d") {
+				AlertMessage(data.errorDesc,"success");
+				//ModalPrependInfo("删除设备-"+data.errorDesc,"alert-success");			
+			}
+			else{
+				AlertMessage(data.errorDesc,"error");
+				//ModalPrependInfo("删除设备-"+data.errorDesc,"alert-error");
+			}
+		},
+		error: function () {
+			AlertMessage("操作失败","error");
+			//ModalPrependInfo("操作失败","alert-error");
+		}
+	});
+}
+function ModalPrependInfo(info,type)
+{
+	$(".alert_add").alert("close");
+	$(".modal-body").prepend(
+		"<div id='modal_alert' class=' alert_add alert "+type+"'>"+
+		"<button type='button' class='close' data-dismiss='alert'>&times;</button>"+
+		info+"</div>"
+	);
+	//$("#modal_alert").addClass(type);
+	//$("#modal_alert").text(info);
+}
+
+
+function DevRefresh()
+{
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/OwnDeviceList',
+		dataType: 'json',
+		data:"",
+		success: function (data) {
+			XMLTree(data,OwnListTreeID);
+		},
+		error: function () {
+			AlertMessage("获取拥有设备列表"+"操作失败","error");
+		}
+	});
+	
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/ShrDeviceList',
+		dataType: 'json',
+		data:"",
+		success: function (data) {
+			XMLTree(data,ShrListTreeID);
+		},
+		error: function () {
+			AlertMessage("获取共享设备列表"+"操作失败","error");
+			}
+	});
+	
+}
+
+//-->
+</script>
+

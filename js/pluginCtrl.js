@@ -1,3 +1,17 @@
+
+var IDMark_Switch = "_switch",
+		IDMark_Icon = "_ico",
+		IDMark_Span = "_span",
+		IDMark_Input = "_input",
+		IDMark_Check = "_check",
+		IDMark_Edit = "_edit",
+		IDMark_Remove = "_remove",
+		IDMark_Ul = "_ul",
+		IDMark_A = "_a";
+
+var OwnListTreeID = 100000,
+	ShrListTreeID = 200000;
+
 var setting = {
 	data : {
 		simpleData : {
@@ -7,30 +21,83 @@ var setting = {
 	view : {
 		// fontCss: getFontCss,
 		selectedMulti : true
+		//addHoverDom: addHoverDom,
+		//removeHoverDom: removeHoverDom
 	},
 	callback : {
-		onDblClick : zTreeOnDblClick
+		onDblClick : zTreeOnDblClick,
+		onClick: zTreeOnClick
 	}
 
 };
+
+function showRMenu(type, x, y) {
+	$("#rMenu ul").show();
+	$("#rMenu ul li").show();
+	if(type=="owndevmenu"){
+		if(g_selectTreeNode.status == 0){
+			$("#rMenu ul  li").hide();
+			$("#m_DelShrDev").show();
+			$("#m_DelDev").show();
+		}
+	}
+	if(type=="shrdevmenu"){
+		$("#rMenu ul  li").hide();
+		if(g_selectTreeNode.status == 1){
+			$("#m_RTVideo").show();
+		}
+		$("#m_DelDev").show();
+	}
+	$("#rMenu").css({"top":y+"px", "left":x+"px"});
+	//$( "#menu" ).menu( "collapseAll", null, true );
+	$("#rMenu").fadeIn("fast");
+	$("body").bind("mousedown", onBodyMouseDown);
+};
+
+function hideRMenu() {
+	$("#rMenu").stop();
+	$("#rMenu").fadeOut("fast");
+	$("body").unbind("mousedown", onBodyMouseDown);
+};
+function onBodyMouseDown(event){
+	hideRMenu();
+	//if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length>0)) {
+	//	hideRMenu();
+	//}
+};
+
+function zTreeOnClick(event, treeId, treeNode) {
+	//alert(treeNode.tId + ", " + treeNode.name);
+	hideRMenu();
+	var selector = "#"+treeNode.tId+IDMark_Span;
+	var x = $(selector).offset().left + $(selector).width();
+	var y = $(selector).offset().top;
+	g_selectTreeNode = treeNode;
+	
+	if(treeNode.pId == OwnListTreeID){
+		g_cameraID = treeNode.id*256+1;
+		showRMenu("owndevmenu",x,y);
+	}
+	if(treeNode.pId == ShrListTreeID){
+		g_cameraID = treeNode.id*256+1;
+		showRMenu("shrdevmenu",x,y);
+	}
+};
+
 // 双击节点打开视频
 function zTreeOnDblClick(event, treeId, treeNode) {
 	//alert(treeNode ? treeNode.tId + ", " + treeNode.name : "isRoot");
-	if(treeNode){
-		var isParent = treeNode.isParent;
-		if (!isParent) {
-			StartRTVideo(treeNode.id);
-		}
-	}
-	
+	//if(treeNode){
+	//	var isParent = treeNode.isParent;
+	//	if (!isParent) {
+		//	StartRTVideo(treeNode.id);
+	//	}
+	//}
 };
 
 var zNodes = [ 
-               {id : 1,pId : 0,name : "摄像头信息列表",open : true,iconSkin : "home"}, 
- //              {id : 11,pId : 1,name : "威海食品",iconSkin : "home"},
- //              {id : 39425,pId : 11,name : "大门高清",iconSkin : "camera"},
-  //             {id : 306945,pId : 11,name : "西安中心机房",iconSkin : "camera"},
-  //             {id : 182785,pId : 11,name : "西安测试",iconSkin : "camera"},
+               {id : OwnListTreeID,pId : 0,name : "拥有摄像头列表",open : true,iconSkin : "home"},
+               {id : ShrListTreeID,pId : 0,name : "共享摄像头列表",open : true,iconSkin : "home"}
 ];
 
 var nodeList = [];
@@ -108,8 +175,12 @@ function ViewTree(bView) {
 
 function setDivMode(value) {
 	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
 	player.SetDivision(value);
-	return false;
+	return true;
 }
 
 // 成功登录标记
@@ -117,6 +188,19 @@ var login = false;
 // 是否安装插件
 var hasplug = true;
 
+function DetectActiveX()
+{
+	   try
+	   {
+	      //var comActiveX = new ActiveXObject("Ke2008WebProj1.Ke2008Web");   
+		   var comActiveX = new ActiveXObject("KEWEBCAMOCX.KeWebCamOCXCtrl.1");
+	   }
+	   catch(e)
+	   {
+		      return false;
+	   }
+	    return true;
+}
 // 页面初始化插件对象,适合多浏览器支持
 function initObject1() {
 	var result = false;
@@ -124,7 +208,7 @@ function initObject1() {
 	else if ($.browser.safari) {browseFlag = 2;}
 	else if ($.browser.mozilla) {browseFlag = 2;}
 	else if ($.browser.opera) {browseFlag = 2;}
-	else if ($.browser.chrome) {	browseFlag = 2;}
+	else if ($.browser.chrome) {browseFlag = 2;}
 	else {	browseFlag = 2;}
 	
 	// 如果是ie
@@ -147,25 +231,27 @@ function initObject1() {
 	}
 	return result;
 }
-//播放视频
-function StartRTVideo(cameraID)
-{
+function InitPlayer(){
 	var player = document.getElementById("player");
 	if(player == null)
 	{
 		return false;
 	}
-	var videoID = cameraID / 256;
-	var channelNo = cameraID % 256;
-	var ret = player.StartRealTimeVideo(videoID, channelNo);
-	var obj = eval("(" + ret + ")");
-	if(obj.retValue != 0){
-		return false;
+	var client_id = $.cookie('clientID');
+	player.InitailCtrl(1);
+	var Addr =CENTER_SVR_IP;
+	var Port = 22616;
+	var retStr = player.ConnectServer(Addr,Port,client_id);
+	var obj = JSON.parse(retStr);
+	if (obj.retValue == 13) {
+		login = true;
+		$("#infoText").text("初始化成功");
+	} else {
+		login = false;
+		$("#infoText").text("初始化失败"+obj.retDes);
 	}
-	SetControlPTZ(1);
-	return true;
-		
 }
+
 // 登录播放插件
 function loginServer() {
 	var player = document.getElementById("player");
@@ -187,17 +273,18 @@ function loginServer() {
 		$("#infoText").text("登陆失败"+obj.retDes);
 	}
 }
-function initPlusgin() {
+function initPlugin() {
 	if (initObject1()) {
-		loginServer();
+		InitPlayer();
+		//loginServer();
 	} else {// 未安装插件提示
 		hasplug = false;
 		$("#infoText").text("监控插件未安装！");
 	}
 	advancedOption();
 	
-	//$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-	$.fn.zTree.init($("#treeDemo"), setting, null);
+	$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	//$.fn.zTree.init($("#treeDemo"), setting, null);
 }
 
 
@@ -259,9 +346,105 @@ function SnapPic(camID)
 	if (obj.retValue == 0) {
 		$("#infoText").text("抓拍成功："+ obj.filePath);
 	} else {
-		$("#infoText").text("抓拍失败"+obj.retDes);
+		$("#infoText").text("抓拍失败："+obj.retDes);
 	}
 
+	return true;
+}
+function StartRecord(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StartRecord(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("开始录像成功："+ obj.filePath);
+	} else {
+		$("#infoText").text("开始录像失败："+obj.retDes);
+	}
+	return true;
+}
+function StopRecord(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StopRecord(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("停止录像成功");
+	} else {
+		$("#infoText").text("停止录像失败："+obj.retDes);
+	}
+	return true;
+}
+function StartListen(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StartRealTimeAudio(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("开始监听成功");
+	} else {
+		$("#infoText").text("开始监听失败："+obj.retDes);
+	}
+	return true;
+}
+function StopListen(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StopRealTimeAudio(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("停止监听成功");
+	} else {
+		$("#infoText").text("停止监听失败："+obj.retDes);
+	}
+	return true;
+}
+function StartTalk(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StartAudioTalk(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("开始通话成功");
+	} else {
+		$("#infoText").text("开始通话失败："+obj.retDes);
+	}
+	return true;
+}
+function StopTalk(camID)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		return false;
+	}
+	var ret = player.StopAudioTalk(camID);
+	var obj = eval("("+ret+")");
+	if (obj.retValue == 0) {
+		$("#infoText").text("停止通话成功");
+	} else {
+		$("#infoText").text("停止通话失败："+obj.retDes);
+	}
 	return true;
 }
 function ControlPTZ(cmd,speed,data)
@@ -472,23 +655,35 @@ function SetControlPTZ(flag) {
 			$("#stepsatus").addClass("step_status" + "_" + g_speed + " tupian");
 		});
 		
-		//控制语音通讯
+		//控制语音通话
 		MM_swapImgRestore("telopen","tel_open","utel_open");
-		$("#linktelo").click(function(){});
+		$("#linktelo").click(function(){
+			StartTalk(0);
+		});
 		MM_swapImgRestore("telclose","tel_close","utel_close");
-		$("#linktelc").click(function(){});
+		$("#linktelc").click(function(){
+			StopTalk(0);
+		});
 		
-		//控制广播
+		//控制监听
 		MM_swapImgRestore("boardopen","board_open","uboard_open");
-		$("#linkboardo").click(function(){});
+		$("#linkboardo").click(function(){
+			StartListen(0);
+		});
 		MM_swapImgRestore("boardclose","board_close","uboard_close");
-		$("#linkboardc").click(function(){});
+		$("#linkboardc").click(function(){
+			StopListen(0);
+		});
 		
 		//控制录像
 		MM_swapImgRestore("recopen","rec_open","urec_open");
-		$("#linkreco").click(function(){});
+		$("#linkreco").click(function(){
+			StartRecord(0);
+		});
 		MM_swapImgRestore("recclose","rec_close","urec_close");
-		$("#linkrecc").click(function(){});
+		$("#linkrecc").click(function(){
+			StopRecord(0);
+		});
 		
 		//抓拍
 		MM_swapImgRestore("zpopen","zp_open","uzp_open");
@@ -518,6 +713,7 @@ function AutoYuntai()
 }
 function CamStatusCheck(info)
 {
+	
 	var statusObj = eval("(" + info + ")");
 	g_cameraID = statusObj.cameraID;
 	switch(statusObj.reportType)
@@ -533,6 +729,7 @@ function CamStatusCheck(info)
 		SetControlPTZ(0);
 		break;
 	}
+	
 }
 function TreeStructAnalyze(info)
 {
@@ -545,9 +742,8 @@ function TreeStructAnalyze(info)
 	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
 	var parentNode = treeObj.getNodeByParam("id", NodePID, null);
 	if(NodeType == 1|| NodeType == 0){
-		
 		var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "home"};
-				treeObj.addNodes(parentNode,newNode,true);
+		treeObj.addNodes(parentNode,newNode,true);
 	}
 	if(NodeType==2){
 		var online = statusObj.onLine;
@@ -559,6 +755,7 @@ function TreeStructAnalyze(info)
 		var newNode = {id : nodeID,pId : NodePID,name : NodeName,iconSkin : "camera"};
 		treeObj.addNodes(parentNode,newNode,true);		
 	}
+	
 	/*
 	xmlDoc = loadXMLString(statusObj.XMLInfo);
 	x=xmlDoc.getElementsByTagName("Node");
@@ -592,3 +789,4 @@ var g_AutoYuntai = 0;
 var g_cameraID;
 var g_speed = 1;
 var g_enablePannel = 0;
+var g_selectTreeNode;

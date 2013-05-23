@@ -1,5 +1,32 @@
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+    
+    
+}());
+
+// Place any jQuery/helper plugins in here.
 $(document).ready(function(){
 
+	
 	//验证设置
 	$.validator.setDefaults({
 		errorPlacement:function(label, element ){
@@ -34,93 +61,6 @@ $(document).ready(function(){
 		errorElement: "span"
 			
 	});
-			
-	//disbaling some functions for Internet Explorer
-	$('.login-box').find('.input-large').removeClass('span10');
-	//bind to State Change
-
-	$('#content').ajaxStart(function(e){
-		alert("start");
-		$(this).fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
-		
-	});
-	$('#content').ajaxStop(function(){
-		$('#loading').remove();
-		$('#content').fadeIn();	
-	});
-	//ajaxify menus
-	$('a.ajax-link').click(function(e){
-		if( $(this).parent().hasClass('active')) return;
-		var $clink=$(this);
-		var addr = $clink.attr('rel');
-		if(!addr) {return;}
-		e.preventDefault();
-		
-		$('#loading').remove();
-		
-		//$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
-		doAjaxLoad(addr);
-		
-		//$('#content').load(addr+" #content-inner");
-		//docReady();
-		//$('#loading').remove();
-		
-		$('ul.main-menu li.active').removeClass('active');
-		$clink.parent('li').addClass('active');	
-	});
-	
-	//highlight current / active link
-	$('ul.main-menu li a').each(function(){
-		if($($(this))[0].href==String(window.location))
-			;//$(this).parent().addClass('active');
-	});
-	
-	//animating menus on hover
-	$('ul.main-menu li:not(.nav-header)').hover(function(){
-		$(this).animate({'margin-left':'+=5'},300);
-	},
-	function(){
-		$(this).animate({'margin-left':'-=5'},300);
-	});
-	
-	// side bar
-	$('.sidebar-nav').affix({offset: {top:  100, bottom: 100}});
- 
-	//other things to do on document ready, seperated for ajax calls
-	docReady();
-});
-
-function doAjaxLoad(addr)
-{
-	$.ajax({
-		url:addr,
-		dataType:"html",
-		beforeSend:function(){
-			//这里使用fadeout会没有效果
-			$('#content').hide().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
-		},
-		complete:function(){
-			$('#loading').remove();
-		},
-		success:function(msg){
-			
-			$('#content').html(jQuery("<div>").append($.parseHTML(msg)).find('#content').html());
-			docReady();
-			//sleep(2000);
-			//$('#loading').remove();
-			$('#content').fadeIn();
-		}
-	});
-}
-		
-function docReady(){
-	//prevent # links from moving to top
-	$('a[href="#"][data-top!=true]').click(function(e){
-		e.preventDefault();
-	});
-	
-	//rich text editor
-	//$('.cleditor').cleditor();
 	
 	//datepicker & datetimepicke
 	$.datepicker.regional['zh'] = {
@@ -144,7 +84,51 @@ function docReady(){
 			changeMonth: true,
 			changeYear: true
 	};
+			
+	//disbaling some functions for Internet Explorer
+	$('.login-box').find('.input-large').removeClass('span10');
+	//bind to State Change
+
+	$('#content').ajaxStart(function(e){
+		alert("start");
+		$(this).fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+		
+	});
+	$('#content').ajaxStop(function(){
+		$('#loading').remove();
+		$('#content').fadeIn();	
+	});
 	
+	
+	//highlight current / active link
+	$('ul.main-menu li a').each(function(){
+		if($($(this))[0].href==String(window.location))
+			;//$(this).parent().addClass('active');
+	});
+	
+	//animating menus on hover
+	$('ul.main-menu li:not(.nav-header)').hover(function(){
+		$(this).animate({'margin-left':'+=5'},300);
+	},
+	function(){
+		$(this).animate({'margin-left':'-=5'},300);
+	});
+	
+	// side bar
+	$('.sidebar-nav').affix({offset: {top:  100, bottom: 100}});
+ 
+	//other things to do on document ready, seperated for ajax calls
+	docReady();
+});
+
+		
+function docReady(){
+	//prevent # links from moving to top
+	$('a[href="#"][data-top!=true]').click(function(e){
+		e.preventDefault();
+	});
+	
+
 	$('.datepicker').datepicker($.datepicker.regional['zh']);
 	$('.datetimepicker').datetimepicker({
 		currentText:"现在",
@@ -152,7 +136,11 @@ function docReady(){
 		timeOnlyTitle:"选择时间",
 		timeText:"时间",
 		hourText:"时",
-		minuteText:"分"
+		minuteText:"分",
+		secondText:"秒",
+		timeFormat:"HH:mm:ss",
+		showSecond: true,
+			
 	});
 	//notifications
 	$('.noty').click(function(e){
@@ -254,7 +242,7 @@ function docReady(){
 		$('#myModal').modal('show');
 	});
 
-	initPlusgin();
+	initPlugin();
 	
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server
@@ -438,4 +426,5 @@ while (y.nodeType!=1)
   }
 return y;
 }
+
 
