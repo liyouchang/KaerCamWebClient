@@ -59,8 +59,8 @@ function doAjaxLoad(addr)
 
 function XMLTree(data,pid)
 {
-	xmlDoc = loadXMLString(data);
-	x=xmlDoc.getElementsByTagName("Info");
+	var xmlDoc = loadXMLString(data);
+	var x=xmlDoc.getElementsByTagName("Info");
 	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");	
 	var parentNode = treeObj.getNodeByParam("id", pid, null);
 	treeObj.removeChildNodes(parentNode);
@@ -96,6 +96,7 @@ function AlertMessage(info,type)
 function toggleCheckbox(element)
 {
 	$(element).attr("checked",element.checked);
+	$(element).val(1);
   //element.checked = !element.checked;
 }
 

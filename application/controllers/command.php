@@ -114,8 +114,8 @@ class Command extends CI_Controller {
 		);
 		$camID = $_POST['cam_id'];
 		$delType = $_POST['del_type'];//12-拥有设备 13-共享设备。
-		//$out= $this->udp_model->DelCamera($camID,$delType);
-		$out = "0d";
+		$out= $this->udp_model->DelCamera($camID,$delType);
+		//$out = "0d";
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
@@ -145,7 +145,6 @@ class Command extends CI_Controller {
 	public function check_share_user()
 	{
 		$devID = $_POST['dev_id'];
-		
 		$out = $this->udp_model->ChkShrUser($devID);
 		$toJson = iconv("GB2312","UTF-8",$out);
 		echo json_encode($toJson);
@@ -177,6 +176,7 @@ class Command extends CI_Controller {
 		$out = $this->udp_model->SetDevRecord($devID,$type,$start);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
+		
 	}
 	public function get_dev_record()
 	{
@@ -188,11 +188,11 @@ class Command extends CI_Controller {
 		$type = $_POST['type'];
 		$out = $this->udp_model->GetDevRecord($devID,$type);
 		$errorCode='0d';
-		if($out == '0d')
+		if($out === "00")
 		{
 			$errorCode=$out;
 		}
-		$outArray = array("status"=>$out,"errorCode"=>$errorCode,"errorDesc" => $errorDescArray[$out]);
+		$outArray = array("status"=>$out,"errorCode"=>$errorCode,"errorDesc" => $errorDescArray[$errorCode]);
 		echo json_encode($outArray);
 	}
 	

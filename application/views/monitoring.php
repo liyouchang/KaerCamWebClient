@@ -319,34 +319,28 @@ function logout()
 			  </div>
 			</div>
 			
-			    <!-- Modal 设置终端录像  -->
+			    <!-- Modal 设置终端录像参数   -->
 			<div id="model_SetRecord" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			    <h3 id="myModalLabel">设置终端录像 </h3>
+			    <h3 id="myModalLabel">设置终端录像参数 </h3>
 			  </div>
 			  <div class="modal-body">
 			    <form id="form_SetRecord" class="form-horizontal">
-  					<div class="control-group">
-    					<label class="control-label" for="addDeviceID">设备ID</label>
-    					<div class="controls">
-      					<input type="text" name="addDeviceID" id="addDeviceID" placeholder="设备ID">
-    					</div>
-  					</div>
 					  <div class="control-group">
 					 	<div class="controls">
 					    <label class="checkbox inline">
-						  <input type="checkbox" id="inlineCheckbox1" value="option1"> 录像
+						  <input type="checkbox" id="recordCheck" onchange='toggleCheckbox(this)'  > 录像
 						</label>
 						<label class="checkbox inline">
-						  <input type="checkbox" id="inlineCheckbox2" value="option2"> 抓拍
+						  <input type="checkbox" id="snapCheck" onchange='toggleCheckbox(this)' > 抓拍
 						</label>
 					  </div>
 					  	</div>
 				</form>
 			  </div>
 			  <div class="modal-footer">
-			   	<button class="btn btn-primary"  onclick="AddCamera()">设置</button>
+			   	<button class="btn btn-primary"  onclick="SetDevRecord()">设置</button>
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 			  </div>
 			 </div> 
@@ -382,10 +376,96 @@ $(function () {
 	$('#model_cancelShare').on('shown',function(){
 		GetShrUser();
 	});
+	$('#model_SetRecord').on('show',function(){
+		GetDevRecordParam();
+	});
 	DevRefresh();
 	
 });
-
+function SetDevRecord()
+{
+	//录像
+	var recordStart = 0;
+	var snapStart = 0;
+	if($("#recordCheck").attr("checked"))
+		recordStart = 1;
+	if($("#snapCheck").attr("checked"))
+		snapStart = 1;
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/set_dev_record',
+		dataType: 'json',
+		data:{dev_id:g_selectTreeNode.id,type:0,start:recordStart},
+		success: function (data) {
+			if (data.errorCode == "0d")
+				AlertMessage("设置录像参数-"+data.errorDesc,"success"); 			
+			else
+				AlertMessage("设置录像参数-"+data.errorDesc,"error");
+		},
+		error: function () {
+			AlertMessage("设置录像参数-"+"操作失败","error");
+		},
+		complete:function(){
+			//抓拍
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL+'command/set_dev_record',
+				dataType: 'json',
+				data:{dev_id:g_selectTreeNode.id, type:1, start:snapStart},
+				success: function (data) {
+					if (data.errorCode == "0d") 
+						AlertMessage("设置抓拍参数-"+data.errorDesc,"success"); 	
+					else
+						AlertMessage("设置抓拍参数-"+data.errorDesc,"error");			
+				},
+				error: function () {
+					AlertMessage("设置抓拍参数-"+"操作失败","error");
+				}
+			});	
+		}
+		
+	});	
+	
+}
+function GetDevRecordParam()
+{
+	//获取录像
+	var selectedVal;
+	$.ajax({
+		type: 'POST',
+		url: BASE_URL+'command/get_dev_record',
+		dataType: 'json',
+		data:{dev_id:g_selectTreeNode.id,type:0},
+		success: function (data) {
+			if (data.errorCode == "0d")
+				$("#recordCheck").attr("checked",!!data.status); 			
+			else
+				AlertMessage("获取录像参数失败-"+data.errorDesc,"error");
+		},
+		error: function () {
+			AlertMessage("获取录像参数-"+"操作失败","error");
+		},
+		complete:function(){
+			//抓拍
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL+'command/get_dev_record',
+				dataType: 'json',
+				data:{dev_id:g_selectTreeNode.id,type:1},
+				success: function (data) {
+					if (data.errorCode == "0d") 
+						$("#snapCheck").attr("checked",!!data.status); 	
+					else
+						AlertMessage("获取抓拍参数失败-"+data.errorDesc,"error");			
+				},
+				error: function () {
+					AlertMessage("获取抓拍参数-"+"操作失败","error");
+				}
+			});	
+		}
+	});	
+	
+}
 function GetShrUser(){
 	$("#modal_cancelShr_alert").empty();
 	$.ajax({
@@ -404,7 +484,7 @@ function GetShrUser(){
 				var userName = x[i].getAttribute("N");
 				$("#modal_cancelShr_alert").append(
 					"<label class='checkbox checkbox_add ' devID="+devID+
-					" UserID="+userID+"><input type='checkbox'onchange='toggleCheckbox(this)'>"+
+					" UserID="+userID+"><input type='checkbox' onchange='toggleCheckbox(this)'>"+
 					userName+"</label>"
 				);
 		  	}
@@ -466,7 +546,6 @@ function AddCamera(){
 			}
 		});
 	}	
-	
 };
 
 function ShrCamera(){
@@ -484,8 +563,7 @@ function ShrCamera(){
 				if (data.errorCode == "0d") {
 					ModalPrependInfo(data.errorDesc,"alert-success");			
 				}
-				else
-				{
+				else{
 					ModalPrependInfo(data.errorDesc,"alert-error");
 				}
 			},
@@ -493,8 +571,7 @@ function ShrCamera(){
 				ModalPrependInfo("操作失败","alert-error");
 			}
 		});
-	}	
-	
+	}
 };
 
 function DelCamera(type)
@@ -555,21 +632,23 @@ function DevRefresh()
 		},
 		error: function () {
 			AlertMessage("获取拥有设备列表"+"操作失败","error");
+		},
+		complete:function(){
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL+'command/ShrDeviceList',
+				dataType: 'json',
+				data:"",
+				success: function (data) {
+					XMLTree(data,ShrListTreeID);
+				},
+				error: function () {
+					AlertMessage("获取共享设备列表"+"操作失败","error");
+					}
+			});
 		}
 	});
 	
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/ShrDeviceList',
-		dataType: 'json',
-		data:"",
-		success: function (data) {
-			XMLTree(data,ShrListTreeID);
-		},
-		error: function () {
-			AlertMessage("获取共享设备列表"+"操作失败","error");
-			}
-	});
 	
 }
 

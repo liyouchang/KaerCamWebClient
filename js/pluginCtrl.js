@@ -138,10 +138,10 @@ function MM_swapImgRestore(id, cs1, cs2) {
 	}
 }
 function MM_swapImage(id, cs1, cs2) {
-	if ($("#" + id).hasClass(cs1)) {
+	if($("#" + id).hasClass(cs1)) {
 		$("#" + id).removeClass(cs1);
 	}
-	if (!$("#" + id).hasClass(cs2)) {
+	if(!$("#" + id).hasClass(cs2)){
 		$("#" + id).addClass(cs2);
 	}
 }
@@ -219,13 +219,13 @@ function initObject1() {
 		$("#movie1").append("<OBJECT id='player' " +
 				"CLASSID=\"clsid:F4418F4B-4A6B-4A93-948F-332025F395E8\" " +
 				"width=100% height=100%></OBJECT>");
-		// if(DetectActiveX())
-		// {
-		result = true;
-		// }else
-		// {
-		// result=false;
-		// }
+		 if(DetectActiveX())
+		 {
+			 result = true;
+		}else
+		{
+			result=false;
+		}
 	} else {
 		result = false;
 	}
@@ -265,7 +265,7 @@ function loginServer() {
 	var IVS_User = $.cookie('UserName'), IVS_Psw = $.cookie('Password');
 	var retStr = player.LoginServer(IVS_User, IVS_Psw, IVS_IP);
 	var obj = eval ("(" + retStr + ")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		login = true;
 		$("#infoText").text("登录成功");
 	} else {
@@ -287,15 +287,6 @@ function initPlugin() {
 	//$.fn.zTree.init($("#treeDemo"), setting, null);
 }
 
-
-function DetectActiveX() {
-	try {
-		var comActiveX = new ActiveXObject("Ke2008WebProj1.Ke2008Web");
-	} catch (e) {
-		return false;
-	}
-	return true;
-}
 
 // 退出时先注销插件
 function logout() {
@@ -341,9 +332,9 @@ function SnapPic(camID)
 	{
 		return false;
 	}
-	var ret = player.TakeSnapshot(camID);
-	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	var retStr = player.TakeSnapshot(camID);
+	var obj = JSON.parse(retStr);
+	if (obj.retValue == 13) {
 		$("#infoText").text("抓拍成功："+ obj.filePath);
 	} else {
 		$("#infoText").text("抓拍失败："+obj.retDes);
@@ -358,9 +349,9 @@ function StartRecord(camID)
 	{
 		return false;
 	}
-	var ret = player.StartRecord(camID);
-	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	var retStr = player.StartRecord(camID);
+	var obj = JSON.parse(retStr);
+	if (obj.retValue == 13) {
 		$("#infoText").text("开始录像成功："+ obj.filePath);
 	} else {
 		$("#infoText").text("开始录像失败："+obj.retDes);
@@ -376,7 +367,7 @@ function StopRecord(camID)
 	}
 	var ret = player.StopRecord(camID);
 	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		$("#infoText").text("停止录像成功");
 	} else {
 		$("#infoText").text("停止录像失败："+obj.retDes);
@@ -392,7 +383,7 @@ function StartListen(camID)
 	}
 	var ret = player.StartRealTimeAudio(camID);
 	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		$("#infoText").text("开始监听成功");
 	} else {
 		$("#infoText").text("开始监听失败："+obj.retDes);
@@ -408,7 +399,7 @@ function StopListen(camID)
 	}
 	var ret = player.StopRealTimeAudio(camID);
 	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		$("#infoText").text("停止监听成功");
 	} else {
 		$("#infoText").text("停止监听失败："+obj.retDes);
@@ -424,7 +415,7 @@ function StartTalk(camID)
 	}
 	var ret = player.StartAudioTalk(camID);
 	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		$("#infoText").text("开始通话成功");
 	} else {
 		$("#infoText").text("开始通话失败："+obj.retDes);
@@ -440,7 +431,7 @@ function StopTalk(camID)
 	}
 	var ret = player.StopAudioTalk(camID);
 	var obj = eval("("+ret+")");
-	if (obj.retValue == 0) {
+	if (obj.retValue == 13) {
 		$("#infoText").text("停止通话成功");
 	} else {
 		$("#infoText").text("停止通话失败："+obj.retDes);
@@ -568,7 +559,7 @@ function SetControlPTZ(flag) {
 
 		// Right
 		MM_swapImgRestore("direction06", "direction_06", "udirection_06");
-		$("#linkDir06").click(function() {
+		$("#linkDir06").mousedown(function() {
 			var speed = g_speed * 62 / 5 + 1;// 1~63
 			ControlPTZ(3, speed, speed);
 		});

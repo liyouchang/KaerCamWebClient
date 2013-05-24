@@ -331,7 +331,7 @@ class UDP_Model extends CI_Model {
 	{
 		try {
 			$this->PConnectServer();
-			$sendLen = 16+$dataLen;
+			$sendLen = 16;
 			$client_id = $this->session->userdata('clientID');
 			$sendMsg = pack($this->requestMsgFromat['GetDevRecord'],"FF25",$sendLen,$client_id,$devID,1,$type);
 			$recvMsg =  $this->writeAndRead($sendMsg);
@@ -348,7 +348,7 @@ class UDP_Model extends CI_Model {
 	{
 		try {
 			$this->PConnectServer();
-			$sendLen = 16+$dataLen;
+			$sendLen = 18;
 			$client_id = $this->session->userdata('clientID');
 			$sendMsg = pack($this->requestMsgFromat['SetDevRecord'],"FF24",$sendLen,$client_id,$devID,1,$type,0,$start);
 			$recvMsg =  $this->writeAndRead($sendMsg);

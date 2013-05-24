@@ -139,7 +139,7 @@ function docReady(){
 		minuteText:"分",
 		secondText:"秒",
 		timeFormat:"HH:mm:ss",
-		showSecond: true,
+		showSecond: true
 			
 	});
 	//notifications

@@ -55,12 +55,9 @@
 								</div>
 							 	<div class="form-actions">
 						  			<button type="submit" class="btn btn-primary">查询录像</button>
-						  			
 								</div>
 					      	</fieldset>
 					   	</form>	
-					   
-						
 					</div>
 				</div><!-- span -->
 				
@@ -95,7 +92,7 @@
 							<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 						</div>
 					</div>
-					<div class="box-content">
+					<div id="recordFileList" class="box-content">
 						<table class="table table-bordered table-striped table-condensed">
 							  <thead>
 								  <tr>
@@ -107,22 +104,7 @@
 									  <th>操作</th>                                          
 								  </tr>
 							  </thead>   
-							  <tbody>
-								<tr>
-									<td>Kaer</td>
-									<td>Kaer</td>
-									<td>移动侦测</td>
-									<td class="center">2012/01/01</td>
-									<td class="center">Member</td>
-									<td class="center">
-										<span class="label label-success">Active</span>
-										<span class="label label-success">Active</span>
-										<span class="label label-success">Active</span>
-										<span class="label label-success">Active</span>
-									</td>                                       
-								</tr>
-							              
-							                     
+							  <tbody >
 							  </tbody>
 						 </table>  
 					</div>
@@ -134,10 +116,19 @@
 <!--
 
 $(function () {
+
+
+	$._messengerDefaults = {
+			maxMessages:5,
+			extraClasses: 'messenger-fixed messenger-theme-future messenger-on-bottom messenger-on-left'
+	};
+	
 	$("#menu-recorder").addClass("active");
 	//$("#movie1").hide();
 	setDivMode(202);
 	OwnDevRefresh();
+
+
 	
 	$("#form_recordQuery").validate({
 		rules: {
@@ -162,24 +153,9 @@ $(function () {
 	$("#startTime").datetimepicker('setDate', currentDate );
 	currentDate.setHours(23,59,59);
 	$("#endTime").datetimepicker('setDate', currentDate );
+
 	
 });
-
-function openPlayZone()
-{
-  if($("#movie1").is(":hidden"))
-  { 
-	$("#image").attr("src","../img/arrowUp1.png");  
-    //$("#objectZone").css({width:"100%",height:"320px"});
-    $("#movie1").show();
-  }else
-  {
-	$("#image").attr("src","../img/arrowDown1.png");
-	//$("#objectZone").css({width:"0%",height:"0px"});
-	$("#movie1").hide();
-  }
-}
-
 
 function OwnDevRefresh()
 {
@@ -214,9 +190,10 @@ function QueryRecordFileList()
 	var player = document.getElementById("player");
 	if(player == null)
 	{
+		AlertMessage("播放插件未安装","error");
 		return false;
 	}
-	var vText = $("#mydevice").find("option:selected").val();
+	//var devID = $("#mydevice").find("option:selected").val();
 	var startTime=new Date($("#startTime").datetimepicker("getDate"));
 	var endTime = new Date($("#endTime").datetimepicker("getDate"));
 	var camID = $("#mydevice option:selected").val();
@@ -225,10 +202,53 @@ function QueryRecordFileList()
 	var obj = JSON.parse(retStr);
 	if (obj.retValue == 13) {
 		AlertMessage("操作成功","success");
+		g_cameraID = camID;
+		var fileArray = obj.fileList;
+		$("#recordFileList tbody").empty();
+		InsertRecordTable(fileArray);
 	} else {
 		AlertMessage("操作失败-"+obj.retDes,"error");
 	}
 	return true;
+}
+function InsertRecordTable(fileArray)
+{
+	var x;
+	for(x in fileArray)
+	{
+		var sd=new Date(fileArray[x].startTime*1000);
+		var ss = (sd.getMonth()+1)+"/"+sd.getDate()+"/"+sd.getFullYear()+
+		" "+sd.getHours()+":"+sd.getMinutes()+":"+sd.getSeconds();
+		var ed=new Date(fileArray[x].endTime*1000);
+		var es = (ed.getMonth()+1)+"/"+ed.getDate()+"/"+ed.getFullYear()+
+		" "+ed.getHours()+":"+ed.getMinutes()+":"+ed.getSeconds();
+		
+		$("#recordFileList tbody").append("<tr><td>"+fileArray[x].fileNo+
+				"</td><td>"+ss+"</td><td>"+es+"</td><td>"+
+				fileArray[x].fileSize+"</td><td></td>"+
+			"<td><a class='label label-success' onclick='PlayRecord(this)' fileNo="+
+			fileArray[x].fileNo+">播放录像</a></td></tr>");
+		fileArray[x]
+	}
+}
+function PlayRecord(element)
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		AlertMessage("播放插件未安装","error");
+		return false;
+	}
+	var fileNo = $(element).attr('fileNo');
+	var retStr = player.PlayRemoteRecord(g_cameraID,fileNo);
+	var obj = JSON.parse(retStr);
+	if (obj.retValue == 13) {
+		AlertMessage("播放录像成功","success");
+	} else {
+		AlertMessage("播放录像失败-"+obj.retDes,"error");
+	}
+	return true;
+	
 }
 //-->
 </script>
