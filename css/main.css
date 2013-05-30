@@ -296,7 +296,7 @@ my navbar style
 .navbar .nav .active > a,
 .navbar .nav .active > a:hover,
 .navbar .nav .active > a:focus {
-	background-image: url(../img/icons/add.png);
+	/*background-image: url(../img/icons/add.png);*/
 	background-position: center 15px;
 	background-repeat: no-repeat;
 	-webkit-transition: all 0.2s ease;
@@ -370,38 +370,38 @@ width: 100px;
 {
 	width:1170px
 }
-.lt-ie9 .span12
+.lt-ie9 .row .span12
 {
 	width:1170px;
 }
-.lt-ie9 .span11
+.lt-ie9 .row .span11
 {
 	width:1070px;
 }
-.lt-ie9 .span9
+.lt-ie9 .row .span9
 {
 	width:870px;
 }
 
-.lt-ie9 .span8
+.lt-ie9 .row .span8
 {
 	width:770px;
 }
-.lt-ie9 .span6
+.lt-ie9 .row .span6
 {
 	width:570px;
 }
-.lt-ie9 .span5
+.lt-ie9 .row .span5
 {
 	width:470px;
 }
 
-.lt-ie9 .span4
+.lt-ie9 .row .span4
 {
 	width:370px;
 }
 
-.lt-ie9 .span3
+.lt-ie9 .row .span3
 {
 	width:270px;
 }

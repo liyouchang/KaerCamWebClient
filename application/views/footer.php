@@ -40,11 +40,11 @@
 	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
     <script>window.jQuery || document.write('<script src="<?php echo base_url('js/vendor/jquery-1.9.1.js')?>"><\/script>')</script>
    
-	<script src="<?php echo base_url('js/vendor/jquery.mb.browser.js')?>"></script>
+	<script src="<?php echo base_url('js/vendor/jquery.mb.browser.min.js')?>"></script>
 	<!-- jQuery UI -->
 	<script src="<?php echo base_url('js/vendor/jquery-ui-1.10.0.custom.min.js')?>"></script>
 		<!-- zTree form -->
-	<script src="<?php echo base_url('js/vendor/jquery.ztree.core-3.5.js') ?>"></script> 
+	<script src="<?php echo base_url('js/vendor/jquery.ztree.core-3.5.min.js') ?>"></script> 
 	<script src="<?php echo base_url('js/vendor/jquery.cookie.js')?>"></script>
 	
 	<script src="<?php echo base_url('js/vendor/json2.js')?>"></script>
@@ -75,8 +75,7 @@
 	
 	
 	<script src='<?php echo base_url('js/vendor/bootstrap.js')?>'></script> 
-	<script src='<?php echo base_url('js/vendor/messenger.js')?>'></script> 
-	
+	<script src='<?php echo base_url('js/vendor/messenger.min.js')?>'></script> 
 	<script src='<?php echo base_url('js/vendor/underscore-1.4.4.js')?>'></script> 
 	<!-- backbone need underscore -->
 	<script src='<?php echo base_url('js/vendor/backbone.js')?>'></script> 

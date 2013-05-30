@@ -45,7 +45,7 @@ function logout()
 			<div class="row">	
 				<div class="box span8">
 					<div class="box-header well" data-original-title>
-						<h2>视频窗口</h2>
+						<h2><i class="icon-facetime-video"></i>视频窗口</h2>
 						<div class="box-icon">
 						<!-- 	<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a> -->
 						</div>
@@ -224,9 +224,11 @@ function logout()
 			         <!-- <li id="m_AddCam"><a href="#model_addCam" data-toggle="modal" data-backdrop="static">添加摄像头</a></li> -->
                      <li id="m_RTVideo"><a href="#" onclick="StartRTVideo(g_cameraID)">实时视频</a></li>
                      <li id="m_ShrCam"><a href="#model_shrCam" data-toggle="modal">分享摄像头</a></li>
-                     <li id="m_SetRecord"><a href="#model_SetRecord" data-toggle="modal">设置终端录像</a></li>
+                     
+                     <!-- <li id="m_SetRecord"><a href="#model_SetRecord" data-toggle="modal">设置终端录像</a></li> -->
                      <li id="m_DelShrDev"><a href="#model_cancelShare"  data-toggle="modal">删除分享</a></li>
                      <li id="m_DelDev"><a href="#model_delCam" data-toggle="modal">删除摄像头</a></li>
+                     <li id="m_SetWifi"><a href="#model_SetWifi" data-toggle="modal">设备Wifi配置</a></li>
                     </ul>
              </div>		
 			
@@ -344,6 +346,67 @@ function logout()
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 			  </div>
 			 </div> 
+			 
+			 <!-- Modal 设备Wifi参数设置   -->
+			<div id="model_SetWifi" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">设备Wifi参数设置 </h3>
+			  </div>
+			  <div class="modal-body">
+			  	   <form id="form_WifiSet" class="form-horizontal">
+			  	   		<input type="text"  id='wifiListNo' style="display:none">
+			  	     <div class="control-group">
+					    <label class="control-label" for="wifiPwd">Wifi密码</label>
+					    <div class="controls">					    	
+					    	<input type="text" name="wifiPwd" id='wifiPwd'>
+					    </div>
+					  </div>
+					  <div class="control-group">
+					 	<div class="controls">
+					    	<label class="checkbox">
+						  		<input type="checkbox" id="pppoeCheck" onchange='toggleCheckbox(this)'  >启用PPPOE
+							</label>
+					  	</div>
+					  </div>
+					  <div class="control-group">
+					    <label class="control-label" for="pppoeName">PPPOE用户名</label>
+					    <div class="controls">
+					      <input type="text" name="pppoeName" id='pppoeName' placeholder="">
+					    </div>
+					  </div>
+					   <div class="control-group">
+					    <label class="control-label" for="pppoePwd">PPPOE密码</label>
+					    <div class="controls">
+					      <input type="text" name="pppoePwd" id='pppoePwd' placeholder="">
+					    </div>
+					  </div>
+					   <div class="control-group">
+					    <div class="controls">
+					      <input type="button" onclick="SetWifiParam()" value="设置">
+					      <input type="button" onclick="ShowApList()" value="返回">
+					      
+					    </div>
+					  </div>
+					</form>
+				  <table class="table table-bordered table-striped table-condensed">
+								  <thead>
+									  <tr>
+										  <th>#</th>
+										  <th>SSID</th>
+										  <th>加密方式</th>
+										  <th>操作</th>                                          
+									  </tr>
+								  </thead>   
+								  <tbody >
+								  </tbody>
+				  </table>  
+			  </div>
+			  <div class="modal-footer">
+			  	<button class="btn btn-primary"  onclick="GetWifi()">刷新网络</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			 </div> 
 <?php include('footer.php'); ?>
 
 <script type="text/javascript">
@@ -371,7 +434,6 @@ $(function () {
 	});
 	$('.modal').on('show', function () {
 		$("#player").hide();
-		
 	});
 	$('#model_cancelShare').on('shown',function(){
 		GetShrUser();
@@ -379,278 +441,12 @@ $(function () {
 	$('#model_SetRecord').on('show',function(){
 		GetDevRecordParam();
 	});
+	$('#model_SetWifi').on('shown',function(){
+		ShowApList();
+		$("#model_SetWifi tbody").empty();
+	});
 	DevRefresh();
-	
 });
-function SetDevRecord()
-{
-	//录像
-	var recordStart = 0;
-	var snapStart = 0;
-	if($("#recordCheck").attr("checked"))
-		recordStart = 1;
-	if($("#snapCheck").attr("checked"))
-		snapStart = 1;
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/set_dev_record',
-		dataType: 'json',
-		data:{dev_id:g_selectTreeNode.id,type:0,start:recordStart},
-		success: function (data) {
-			if (data.errorCode == "0d")
-				AlertMessage("设置录像参数-"+data.errorDesc,"success"); 			
-			else
-				AlertMessage("设置录像参数-"+data.errorDesc,"error");
-		},
-		error: function () {
-			AlertMessage("设置录像参数-"+"操作失败","error");
-		},
-		complete:function(){
-			//抓拍
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/set_dev_record',
-				dataType: 'json',
-				data:{dev_id:g_selectTreeNode.id, type:1, start:snapStart},
-				success: function (data) {
-					if (data.errorCode == "0d") 
-						AlertMessage("设置抓拍参数-"+data.errorDesc,"success"); 	
-					else
-						AlertMessage("设置抓拍参数-"+data.errorDesc,"error");			
-				},
-				error: function () {
-					AlertMessage("设置抓拍参数-"+"操作失败","error");
-				}
-			});	
-		}
-		
-	});	
-	
-}
-function GetDevRecordParam()
-{
-	//获取录像
-	var selectedVal;
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/get_dev_record',
-		dataType: 'json',
-		data:{dev_id:g_selectTreeNode.id,type:0},
-		success: function (data) {
-			if (data.errorCode == "0d")
-				$("#recordCheck").attr("checked",!!data.status); 			
-			else
-				AlertMessage("获取录像参数失败-"+data.errorDesc,"error");
-		},
-		error: function () {
-			AlertMessage("获取录像参数-"+"操作失败","error");
-		},
-		complete:function(){
-			//抓拍
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/get_dev_record',
-				dataType: 'json',
-				data:{dev_id:g_selectTreeNode.id,type:1},
-				success: function (data) {
-					if (data.errorCode == "0d") 
-						$("#snapCheck").attr("checked",!!data.status); 	
-					else
-						AlertMessage("获取抓拍参数失败-"+data.errorDesc,"error");			
-				},
-				error: function () {
-					AlertMessage("获取抓拍参数-"+"操作失败","error");
-				}
-			});	
-		}
-	});	
-	
-}
-function GetShrUser(){
-	$("#modal_cancelShr_alert").empty();
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/check_share_user',
-		dataType: 'json',
-		data:{dev_id:g_selectTreeNode.id},
-		success: function (data) {
-			//alert(data);
-			xmlDoc = loadXMLString(data);
-			x=xmlDoc.getElementsByTagName("Info");
-			for (var i=0;i<x.length;i++)
-		  	{ 
-				var devID = x[i].getAttribute("D");
-				var userID = x[i].getAttribute("U");
-				var userName = x[i].getAttribute("N");
-				$("#modal_cancelShr_alert").append(
-					"<label class='checkbox checkbox_add ' devID="+devID+
-					" UserID="+userID+"><input type='checkbox' onchange='toggleCheckbox(this)'>"+
-					userName+"</label>"
-				);
-		  	}
-		},
-		error: function () {
-			AlertMessage("获取设备共享用户"+"操作失败","error");
-		}
-	});	
-}
-
-function CancelShare(){
-	$("#modal_cancelShr_alert .checkbox_add").each(function(){
-		if($(this).children(":checkbox").attr("checked")){
-			var userName = $(this).text();
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/cancel_share',
-				dataType: 'json',
-				data:{dev_id:$(this).attr("devID"),shr_user:$(this).attr("UserID")},
-				success: function (data) {
-					if (data.errorCode == "0d") {
-						AlertMessage("删除共享用户"+userName+data.errorDesc,"success");			
-					}
-					else
-					{
-						AlertMessage("删除共享用户"+userName+"失败："+data.errorDesc,"error");			
-					}
-				},
-				error: function () {
-					AlertMessage("删除共享用户"+userName+"操作失败","error");
-				}
-			});	
-			//alert($(this).attr("devID"));
-		}
-	  });
-}
-function AddCamera(){
-	//ModalPrependInfo("","alert-info");
-	var valid = $("#form_addCam").valid();
-	if(valid){
-		//$('#model_addCam').modal('hide');
-		var params = {cam_id:$("#addDeviceID").val() ,device_name:$("#addDeviceName").val()};
-		$.ajax({
-			type: 'POST',
-			url: BASE_URL+'command/add_camera',
-			dataType: 'json',
-			data:params,
-			success: function (data) {
-				if (data.errorCode == "0d") {
-					ModalPrependInfo(data.errorDesc,"alert-success");			
-				}
-				else
-				{
-					ModalPrependInfo(data.errorDesc,"alert-error");
-				}
-			},
-			error: function () {
-				ModalPrependInfo("操作失败","alert-error");
-			}
-		});
-	}	
-};
-
-function ShrCamera(){
-	//ModalPrependInfo("","alert-info");
-	var valid = $("#form_shrCam").valid();
-	if(valid){
-		//$('#model_addCam').modal('hide');
-		var params = {user_name:$("#shr_user_name").val() ,cam_id:g_selectTreeNode.id};
-		$.ajax({
-			type: 'POST',
-			url: BASE_URL+'command/shr_camera',
-			dataType: 'json',
-			data:params,
-			success: function (data) {
-				if (data.errorCode == "0d") {
-					ModalPrependInfo(data.errorDesc,"alert-success");			
-				}
-				else{
-					ModalPrependInfo(data.errorDesc,"alert-error");
-				}
-			},
-			error: function () {
-				ModalPrependInfo("操作失败","alert-error");
-			}
-		});
-	}
-};
-
-function DelCamera(type)
-{
-	//alert("deleted");
-	var type;
-	if(g_selectTreeNode.pId == OwnListTreeID){
-		type = 12;
-	}
-	if(g_selectTreeNode.pId == ShrListTreeID){
-		type = 13;
-	}
-	var params = {cam_id:g_selectTreeNode.id,del_type:type};
-	//alert(JSON.stringify(params));
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/del_camera',
-		dataType: 'json',
-		data:params,
-		success: function (data) {
-			if (data.errorCode == "0d") {
-				AlertMessage(data.errorDesc,"success");
-				//ModalPrependInfo("删除设备-"+data.errorDesc,"alert-success");			
-			}
-			else{
-				AlertMessage(data.errorDesc,"error");
-				//ModalPrependInfo("删除设备-"+data.errorDesc,"alert-error");
-			}
-		},
-		error: function () {
-			AlertMessage("操作失败","error");
-			//ModalPrependInfo("操作失败","alert-error");
-		}
-	});
-}
-function ModalPrependInfo(info,type)
-{
-	$(".alert_add").alert("close");
-	$(".modal-body").prepend(
-		"<div id='modal_alert' class=' alert_add alert "+type+"'>"+
-		"<button type='button' class='close' data-dismiss='alert'>&times;</button>"+
-		info+"</div>"
-	);
-	//$("#modal_alert").addClass(type);
-	//$("#modal_alert").text(info);
-}
-
-
-function DevRefresh()
-{
-	$.ajax({
-		type: 'POST',
-		url: BASE_URL+'command/OwnDeviceList',
-		dataType: 'json',
-		data:"",
-		success: function (data) {
-			XMLTree(data,OwnListTreeID);
-		},
-		error: function () {
-			AlertMessage("获取拥有设备列表"+"操作失败","error");
-		},
-		complete:function(){
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/ShrDeviceList',
-				dataType: 'json',
-				data:"",
-				success: function (data) {
-					XMLTree(data,ShrListTreeID);
-				},
-				error: function () {
-					AlertMessage("获取共享设备列表"+"操作失败","error");
-					}
-			});
-		}
-	});
-	
-	
-}
 
 //-->
 </script>

@@ -5,23 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="zh"> <!--<![endif]-->
 
 <head>
-
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title><?php echo $title?></title>
-	
 	<meta name="description" content="Kaer web camera client system.">
 	<meta name="viewport" content="width=device-width">
-	<meta name="author" content="lihaote">
-
-	
+	<meta name="author" content="lht">
 	<!-- The styles -->
-	
-
 	<link href='<?php echo base_url('css/bootstrap.css') ?>' rel='stylesheet'>
-	
 	<link href="<?php echo base_url('css/jquery-ui-1.10.0.custom.css')?>" rel="stylesheet">
-	
 	<link type="text/css" href="<?php echo base_url('css/font-awesome.min.css') ?>" rel="stylesheet" />
     <!--[if IE 7]>
     <link rel="stylesheet" href="<?php echo base_url('css/font-awesome-ie7.min.css') ?>">
@@ -59,11 +51,11 @@
     <link rel="stylesheet" href="<?php echo base_url('css/main.css')?>">
 	
 
-	
 	<script type="text/javascript">
 	SITE_URL = "<?php echo site_url() ?>";
 	BASE_URL = "<?php echo base_url()?>";
-	CENTER_SVR_IP = "<?php echo $centerSvrIp?>";
+	CENTER_SVR_IP = "<?php echo $centerSvrIp ?>";
+	
 	</script>
 	<script src="<?php echo base_url('js/vendor/modernizr-2.6.2.min.js')?>"></script>
 	
@@ -82,13 +74,14 @@
 	<div class="navbar navbar-inverse " id="main-navbar">
 		<div class="navbar-inner" >
 			<div class="container">
-				<a class="brand logo" href=<?php  echo base_url("start/my_camera")?>> <img alt="Logo" src="<?php echo base_url('img/logo20.png')?>" /> <span>视频监控系统</span></a>
+				<a class="brand logo" href='#'> <img alt="Logo" src="<?php echo base_url('img/logo20.png')?>" /> <span>视频监控系统</span></a>
 				
 				<ul class=" nav nav-tabs nav-stacked main-menu ">
 					<li id="menu-monitoring" class="success dropdown"><a class="dropdown-toggle" href="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
-					<li id="menu-recorder" class="success dropdown"><a class="dropdown-toggle" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
-					
+					<!-- <li id="menu-recorder" class="success dropdown"><a class="dropdown-toggle" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li> -->
+					<li  id="menu-sysParam" class="success dropdown"><a class="dropdown-toggle" href="sys_config"><i class="icon-edit"></i><span class="hidden-tablet"> 系统配置</span></a></li>
 				<!-- 
+				<a class="brand logo" href=<?php  echo base_url("start/my_camera")?>> <img alt="Logo" src="<?php echo base_url('img/logo20.png')?>" /> <span>视频监控系统</span></a>
 						<li class="success dropdown"><a class="ajax-link dropdown-toggle" rel="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
 						<li class="success dropdown"><a class="ajax-link dropdown-toggle" rel="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
 						<li class="success dropdown"><a class="ajax-link dropdown-toggle" rel="alarms_query"><i class="icon-list-alt"></i><span class="hidden-tablet"> 告警查询</span></a></li>
@@ -109,11 +102,13 @@
 				<div class="btn-group pull-right usermenu " >
 					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 						<i class="icon-user"></i><span class="hidden-phone"> <?php echo '登录用户：'.$userName?></span>
-						<span class="caret"></span>
+						 <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
+						<!-- 
 						<li><a class="" href="home"><i class="icon-user"></i><span class="hidden-tablet"> 账户设置</span></a></li>
-						<li class="divider"></li> 
+						<li class="divider"></li>
+						 --> 
 						<li><a href="<?php  echo base_url('login/logout')?>"><i class="icon-lock"></i><span class="hidden-tablet"> 退出登录</span></a></li>
 					</ul>
 				</div>

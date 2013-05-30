@@ -8,7 +8,6 @@ class Login extends CI_Controller {
 		
 		$this->data['pluginFilePath'] = base_url("plugin/KeWebCamSetup.exe");
 		$this->data['centerSvrIp']=$this->config->item('center_server_ip');
-		
 	}
 	public $data = array("title"=> '登录');
 	public function index()
@@ -17,13 +16,13 @@ class Login extends CI_Controller {
 	}
 	public function login()
 	{
-		$data['title'] = '登录';
-		$this->load->view('login_view',$data);
+		$this->data['title'] = '登录';
+		$this->load->view('login_view',$this->data);
 	}
 	public function register()
 	{
-		$data['title'] = '用户注册';
-		$this->load->view('user_register',$data);
+		$this->data['title'] = '用户注册';
+		$this->load->view('user_register',$this->data);
 	}
 	
 	public function logout()
@@ -36,8 +35,8 @@ class Login extends CI_Controller {
 	}
 	public function forget_pwd()
 	{
-		$data['title'] = '忘记密码';
-		$this->load->view('forget_pwd_view',$data);
+		$this->data['title'] = '忘记密码';
+		$this->load->view('forget_pwd_view',$this->data);
 	}
 	public function heart_beat()
 	{

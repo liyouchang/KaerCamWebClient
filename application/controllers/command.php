@@ -21,9 +21,9 @@ class Command extends CI_Controller {
 		
 		$out = $this->udp_model->login($name,$pwd);
 		$client_id = $this->session->userdata('clientID');
-		$outArray = array("errorCode"=>$out,
+		$outArray = array("errorCode" => $out,
 				"errorDesc" => $errorDescArray[$out],
-				"clientID"=>$client_id);
+				"clientID" => $client_id);
 		if($out === "0d")
 		{
 			$newdata = array('name' => $name,'pwd' => $pwd);
@@ -193,6 +193,28 @@ class Command extends CI_Controller {
 			$errorCode=$out;
 		}
 		$outArray = array("status"=>$out,"errorCode"=>$errorCode,"errorDesc" => $errorDescArray[$errorCode]);
+		echo json_encode($outArray);
+	}
+	public function change_user_pwd()
+	{
+		$errorDescArray = array(
+				"0d" => "成功",
+				"05" => "失败",
+				"01" => "原密码错误",
+				"00" => "与服务器通讯失败"
+		);
+		$oldPwd = $_POST['oldPwd'];
+		$newPwd = $_POST['newPwd'];
+		$currentPwd = $this->session->userdata('pwd');
+		if($oldPwd != $currentPwd)
+		{
+			$out = '01';
+		}
+		else 
+		{
+			$out = $this->udp_model->ChangeUserPwd($newPwd);
+		}
+		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
 	

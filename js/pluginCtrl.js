@@ -45,8 +45,10 @@ function showRMenu(type, x, y) {
 		$("#rMenu ul  li").hide();
 		if(g_selectTreeNode.status == 1){
 			$("#m_RTVideo").show();
+			//$("#m_SetWifi").show();
 		}
 		$("#m_DelDev").show();
+		
 	}
 	$("#rMenu").css({"top":y+"px", "left":x+"px"});
 	//$( "#menu" ).menu( "collapseAll", null, true );

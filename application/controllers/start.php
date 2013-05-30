@@ -17,7 +17,7 @@ class Start extends CI_Controller {
 	public function index()
 	{
 		$this->data['title'] = '登录';
-		$this->data['pluginFilePath'] = base_url("plugin/VideoMonitorV1.00.20.msi");
+		$this->data['pluginFilePath'] = base_url("plugin/KeWebCamSetup.exe");
 		$this->load->view('login_view',$this->data);
 	}
 	public function home()

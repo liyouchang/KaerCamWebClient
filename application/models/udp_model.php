@@ -30,6 +30,8 @@ class UDP_Model extends CI_Model {
 			"QueryRecord"=>"H4IIICH4IIICH12H12CC",
 			"SetDevRecord"=>"H4IIICCCC",
 			"GetDevRecord"=>"H4IIICC",
+			"ChgUserPwd"=>"H4IICa40",
+			
 			
 	);
 	protected $respondMsgFromat = array(
@@ -47,8 +49,9 @@ class UDP_Model extends CI_Model {
 			"QueryRecord"=>"H20udpData/H4head/ImsgLen/IdevID/IclientID/CchnlNo/H2respMsg/IfileNo/H12startTime/H12endTime/IfileSize/a*fileData",
 			"SetDevRecord"=>"H4head/Ilen/IclientID/IdevID/CchannelNo/Ctype/H2respMsg",
 			"GetDevRecord"=>"H4head/Ilen/IclientID/IdevID/CchannelNo/Ctype/Cstatus",
+			"ChgUserPwd"=>"H4head/Ilen/IclientID/Ctype/H2respMsg",
 	);
-
+	
 	/**
 	 * @function write and read from socket
 	 * @param socket $socket
@@ -109,7 +112,7 @@ class UDP_Model extends CI_Model {
 	{
 		try {
 			$this->PConnectServer();
-			//生成16位加密数据(md5 加密）
+			//生成32位加密数据(md5 加密）
 			$secretData= md5($passWord);
 			$data = "<?xml version='1.0' encoding='utf-8'?>".
 			"<Login><Info U=\"$userName\" P=\"$secretData\" M=\"\" /></Login>\n";
@@ -353,6 +356,23 @@ class UDP_Model extends CI_Model {
 			$sendMsg = pack($this->requestMsgFromat['SetDevRecord'],"FF24",$sendLen,$client_id,$devID,1,$type,0,$start);
 			$recvMsg =  $this->writeAndRead($sendMsg);
 			$outArray = unpack($this->respondMsgFromat['SetDevRecord'],$recvMsg);
+		} catch (Exception $e) {
+			log_message('error',$e->getMessage());
+			return "00";
+		}
+		fclose($this->socket);
+		return $outArray['respMsg'];
+	}
+	public function ChangeUserPwd($newPwd)
+	{
+		try {
+			$this->PConnectServer();
+			$sendLen = 51;
+			$secretData= md5($newPwd);
+			$client_id = $this->session->userdata('clientID');
+			$sendMsg = pack($this->requestMsgFromat['ChgUserPwd'],"FF11",$sendLen,$client_id,14,$secretData);
+			$recvMsg =  $this->writeAndRead($sendMsg);
+			$outArray = unpack($this->respondMsgFromat['ChgUserPwd'],$recvMsg);
 		} catch (Exception $e) {
 			log_message('error',$e->getMessage());
 			return "00";

@@ -120,14 +120,13 @@ $(function () {
 					if ($('#remember-long').attr('checked')) { //记住密码
 						$.cookie('UserName', uname, { expires: 7, path: '/' });
 						$.cookie('Password', pwd, { expires: 7, path: '/' });
-						
 					}
 					else {//取消记住的密码，或者没有记住密码
 						$.cookie('UserName', null,{ expires: 7, path: '/' });
 						$.cookie('Password', null,{ expires: 7, path: '/' });
 					}
 					changeAlertMsg(data.errorDesc,"alert-success");
-					location.href = BASE_URL+"start/my_camera";				
+					location.href = BASE_URL+"start/monitoring";				
 				}else {
 					changeAlertMsg(data.errorDesc,"alert-error");
 					$("#login-form input").attr('disabled', false);
