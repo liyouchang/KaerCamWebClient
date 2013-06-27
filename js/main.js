@@ -284,7 +284,31 @@ function AddCamera(){
 		});
 	}	
 };
-
+function ChgDevName(){
+	var valid = $("#form_chgDevName").valid();
+	if(valid){
+		//$('#model_addCam').modal('hide');
+		var params = {devID:g_selectTreeNode.id ,devName:$("#newDeviceName").val()};
+		$.ajax({
+			type: 'POST',
+			url: BASE_URL+'command/change_device_name',
+			dataType: 'json',
+			data:params,
+			success: function (data) {
+				if (data.errorCode == "0d") {
+					ModalPrependInfo(data.errorDesc,"alert-success");			
+				}
+				else
+				{
+					ModalPrependInfo(data.errorDesc,"alert-error");
+				}
+			},
+			error: function () {
+				ModalPrependInfo("操作失败","alert-error");
+			}
+		});
+	}	
+}
 function ShrCamera(){
 	//ModalPrependInfo("","alert-info");
 	var valid = $("#form_shrCam").valid();
@@ -453,7 +477,8 @@ function SetWifiParam()
 	var pppoeUseVal = 0;
 	if($("#pppoeCheck").attr("checked"))
 		pppoeUseVal = 1;
-	var params = {listNo:$('#wifiListNo').val(),
+	var wifiListNo = parseInt($('#wifiListNo').val());
+	var params = {listNo:wifiListNo,
 			wifiPwd:$('#wifiPwd').val(),
 			pppoeUse:pppoeUseVal,
 			pppoeName:$('#pppoeName').val(),

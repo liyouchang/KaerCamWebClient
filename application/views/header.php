@@ -78,7 +78,7 @@
 				
 				<ul class=" nav nav-tabs nav-stacked main-menu ">
 					<li id="menu-monitoring" class="success dropdown"><a class="dropdown-toggle" href="monitoring"><i class="icon-facetime-video"></i><span class="hidden-tablet"> 实时监控</span></a></li>
-					<!-- <li id="menu-recorder" class="success dropdown"><a class="dropdown-toggle" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li> -->
+					<li id="menu-recorder" class="success dropdown"><a class="dropdown-toggle" href="record_view"><i class="icon-film"></i><span class="hidden-tablet"> 录像播放</span></a></li>
 					<li  id="menu-sysParam" class="success dropdown"><a class="dropdown-toggle" href="sys_config"><i class="icon-edit"></i><span class="hidden-tablet"> 系统配置</span></a></li>
 				<!-- 
 				<a class="brand logo" href=<?php  echo base_url("start/my_camera")?>> <img alt="Logo" src="<?php echo base_url('img/logo20.png')?>" /> <span>视频监控系统</span></a>

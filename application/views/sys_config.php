@@ -23,14 +23,14 @@
 						  <fieldset>
 							<legend>本地保存路径</legend>
 							<div class="control-group">
-							  <label class="control-label " for="snapPath">本地抓拍图片保存路径</label>
+							  <label class="control-label " for="snapPath">抓拍图片保存路径</label>
 							  <div class="controls ">
 								<input type="text" class="input-large" id="snapPath" >
 								<button class="btn" type="button" onclick="SetSnapPath(this)">设置</button>
 							  </div>
 							</div>       
 							<div class="control-group">
-							  <label class="control-label" for="videoPath">本地录像默认保存路径</label>
+							  <label class="control-label" for="videoPath">录像文件保存路径</label>
 							  <div class="controls">
 								<input type='text' class="input-large" id="videoPath" ></input>
 								<button class="btn" type="button" onclick="SetVideoPath(this)">设置</button>

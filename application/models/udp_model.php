@@ -31,7 +31,7 @@ class UDP_Model extends CI_Model {
 			"SetDevRecord"=>"H4IIICCCC",
 			"GetDevRecord"=>"H4IIICC",
 			"ChgUserPwd"=>"H4IICa40",
-			
+			"ChgDevName"=>"H4IICa*",
 			
 	);
 	protected $respondMsgFromat = array(
@@ -50,6 +50,7 @@ class UDP_Model extends CI_Model {
 			"SetDevRecord"=>"H4head/Ilen/IclientID/IdevID/CchannelNo/Ctype/H2respMsg",
 			"GetDevRecord"=>"H4head/Ilen/IclientID/IdevID/CchannelNo/Ctype/Cstatus",
 			"ChgUserPwd"=>"H4head/Ilen/IclientID/Ctype/H2respMsg",
+			"ChgDevName"=>"H4head/Ilen/IclientID/Ctype/H2respMsg",
 	);
 	
 	/**
@@ -373,6 +374,24 @@ class UDP_Model extends CI_Model {
 			$sendMsg = pack($this->requestMsgFromat['ChgUserPwd'],"FF11",$sendLen,$client_id,14,$secretData);
 			$recvMsg =  $this->writeAndRead($sendMsg);
 			$outArray = unpack($this->respondMsgFromat['ChgUserPwd'],$recvMsg);
+		} catch (Exception $e) {
+			log_message('error',$e->getMessage());
+			return "00";
+		}
+		fclose($this->socket);
+		return $outArray['respMsg'];
+	}
+	public function ChangeDeviceName($devID,$devName)
+	{
+		try {
+			$this->PConnectServer();
+			$data = "<?xml version='1.0' encoding='utf-8'?>".
+					"<ModifyDevice><Info D=\"$devID\" U=\"$devName\"/></ModifyDevice>\n";
+			$sendLen = strlen($data) + 11;
+			$client_id = $this->session->userdata('clientID');
+			$sendMsg = pack($this->requestMsgFromat['ChgDevName'],"FF12",$sendLen,$client_id,15,$data);
+			$recvMsg =  $this->writeAndRead($sendMsg);
+			$outArray = unpack($this->respondMsgFromat['ChgDevName'],$recvMsg);
 		} catch (Exception $e) {
 			log_message('error',$e->getMessage());
 			return "00";

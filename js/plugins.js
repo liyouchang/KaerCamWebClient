@@ -86,7 +86,7 @@ $(document).ready(function(){
 	};
 			
 	//disbaling some functions for Internet Explorer
-	$('.login-box').find('.input-large').removeClass('span10');
+	//$('.login-box').find('.input-large').removeClass('span10');
 	//bind to State Change
 
 	$('#content').ajaxStart(function(e){

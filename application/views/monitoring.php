@@ -50,23 +50,18 @@ function logout()
 						<!-- 	<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a> -->
 						</div>
 					</div>
-					
 					<div class="box-content ">
-						 
 							<!--插件、及云台信息开始-->
 							<!-- 插件定义开始 -->
 							<div id="movie1" class="center">
-							
 							</div> 
-							<!-- 插件定义结束 -->		
-												
+							<!-- 插件定义结束 -->
 							<div id="camCtl" class=" box center" >
 								<!-- 控制更多操作开始 -->
 								<div class="controlH clearfix">
 									<a class="btn btn-small" id="hidemore" onClick="javascript:advancedOption()">
 									<!-- <span class="active icon icon-color icon-arrowstop-n" id="controlAdvancedIcon"></span> --> 
 									 收起更多操作</a>
-							
 									 <div class="screen" id="screen">
 										<span class="screen1" onClick="javascript:setDivMode(1)" ></span>
 										<span class="screen4" onClick="javascript:setDivMode(4)" ></span>
@@ -111,7 +106,6 @@ function logout()
 										</a>
 									</div>
 									<!--云镜信息展示结束  -->
-							
 									<!--焦距、步长控制开始  -->
 									<div class="pControl2">
 										<div class="pControl2-g1 clearfix">
@@ -156,7 +150,6 @@ function logout()
 										</div>
 									</div>
 									<!--焦距、步长控制结束  -->
-							
 									<!--语音、通信控制开始  -->
 									<div class="pControl3">
 										<div class="pControl3-g1 clearfix">
@@ -200,7 +193,6 @@ function logout()
 							<!--插件、及云台信息结束-->
 					</div>
 				</div><!--/span-->
-				
 				<div class="box span4" style="margin-left: 1.07%">
 					<div class="box-header well" data-original-title>
 						<h2><i class=""></i> 摄像头信息表</h2>
@@ -224,15 +216,14 @@ function logout()
 			         <!-- <li id="m_AddCam"><a href="#model_addCam" data-toggle="modal" data-backdrop="static">添加摄像头</a></li> -->
                      <li id="m_RTVideo"><a href="#" onclick="StartRTVideo(g_cameraID)">实时视频</a></li>
                      <li id="m_ShrCam"><a href="#model_shrCam" data-toggle="modal">分享摄像头</a></li>
-                     
-                     <!-- <li id="m_SetRecord"><a href="#model_SetRecord" data-toggle="modal">设置终端录像</a></li> -->
+                     <li id="m_ChgDevName"><a href="#model_ChgDevName" data-toggle="modal">修改设备名称</a></li>
+                     <li id="m_SetRecord"><a href="#model_SetRecord" data-toggle="modal">设置终端录像</a></li>
                      <li id="m_DelShrDev"><a href="#model_cancelShare"  data-toggle="modal">删除分享</a></li>
                      <li id="m_DelDev"><a href="#model_delCam" data-toggle="modal">删除摄像头</a></li>
                      <li id="m_SetWifi"><a href="#model_SetWifi" data-toggle="modal">设备Wifi配置</a></li>
                     </ul>
              </div>		
-			
-             <!-- Modal  -->
+             <!-- Modal  添加设备-->
 			<div id="model_addCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -249,7 +240,7 @@ function logout()
 					  <div class="control-group">
 					    <label class="control-label" for="addDeviceName">设备名称</label>
 					    <div class="controls">
-					      <input type="text" name="addDeviceName" id="addDeviceName" placeholder="镜头名称">
+					      <input type="text" name="addDeviceName" id="addDeviceName" placeholder="设备名称">
 					    </div>
 					  </div>
 				</form>
@@ -259,6 +250,28 @@ function logout()
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 			  </div>
 			</div>
+			<!-- Modal  修改设备名称-->
+			<div id="model_ChgDevName" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">修改设备名称</h3>
+			  </div>
+			  <div class="modal-body">
+			    <form id="form_chgDevName" class="form-horizontal">
+					  <div class="control-group">
+					    <label class="control-label" for="newDeviceName">设备新名称</label>
+					    <div class="controls">
+					      <input type="text" name="newDeviceName" id="newDeviceName" placeholder="设备名称">
+					    </div>
+					  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			   	<button class="btn btn-danger"  onclick="ChgDevName()">确定</button>
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+			</div>
+			
              <!-- Modal 删除摄像头 -->
 			<div id="model_delCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
@@ -269,14 +282,12 @@ function logout()
 			  	<div id='modal_alert' class='alert alert-info'>
 					<p>你确定要删除设备？</p>
 				</div>
-			  
 			  </div>
 			  <div class="modal-footer">
 			   	<button class="btn btn-danger" data-dismiss="modal" onclick="DelCamera()">确定</button>
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 			  </div>
 			</div>
-			
 			<!-- Shr Cam Modal  -->
 			<div id="model_shrCam" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
@@ -298,9 +309,8 @@ function logout()
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 			  </div>
 			</div>
-			
-			
-			    <!-- Modal 取消分享 -->
+
+		    <!-- Modal 取消分享 -->
 			<div id="model_cancelShare" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -311,9 +321,7 @@ function logout()
 			  		选择删除分享的用户
 				</div>
 			  	<div id='modal_cancelShr_alert' class='alert alert-block'>
-			  		
 				</div>
-			  	
 			  </div>
 			  <div class="modal-footer">
 			   	<button class="btn btn-danger" onclick="CancelShare()">确定</button>
@@ -398,7 +406,7 @@ function logout()
 										  <th>操作</th>                                          
 									  </tr>
 								  </thead>   
-								  <tbody >
+								  <tbody>
 								  </tbody>
 				  </table>  
 			  </div>
@@ -411,7 +419,6 @@ function logout()
 
 <script type="text/javascript">
 <!--
-
 $(function () {
 	$("#menu-monitoring").addClass("active");
 	$("#form_addCam").validate({
@@ -427,6 +434,10 @@ $(function () {
 	$("#form_shrCam").validate({
 		rules: {shr_user_name:"required"},
 		messages: {shr_user_name:"请输入分享用户名称"}
+	});
+	$("#form_ChgDevName").validate({
+		rules: {newDeviceName:"required"},
+		messages: {newDeviceName:"请输入设备名称"}
 	});
 	$('.modal').on('hidden', function () {
 		$(".alert_add").alert("close");

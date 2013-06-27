@@ -31,6 +31,7 @@ class Command extends CI_Controller {
 		}
 		echo json_encode($outArray);
 	}
+	
 	public function user_register()
 	{
 		$errorDescArray = array(
@@ -45,7 +46,8 @@ class Command extends CI_Controller {
 		$pwd = $_POST['user_pwd'];
 		$email = $_POST['reg_email'];
 		$xcode=$_POST['reg_code'];
-		$out= $this->udp_model->user_register($name,$pwd,$email,$xcode);
+		$chName = iconv("UTF-8","GB2312",$name);
+		$out= $this->udp_model->user_register($chName,$pwd,$email,$xcode);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		if($out === "0d")
 		{
@@ -53,8 +55,8 @@ class Command extends CI_Controller {
 			$this->session->set_userdata($newdata);
 		}
 		echo json_encode($outArray);
-		
 	}
+	
 	public function refind_password()
 	{
 		$errorDescArray = array(
@@ -101,10 +103,12 @@ class Command extends CI_Controller {
 		);
 		$camID = $_POST['cam_id'];
 		$devName = $_POST['device_name'];
-		$out= $this->udp_model->AddCamera($camID,$devName);
+		$chDevName = iconv("UTF-8","GB2312",$devName);
+		$out= $this->udp_model->AddCamera($camID,$chDevName);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
+	
 	public function del_camera()
 	{
 		$errorDescArray = array(
@@ -119,6 +123,7 @@ class Command extends CI_Controller {
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
+	
 	public function shr_camera()
 	{
 		$errorDescArray = array(
@@ -133,7 +138,8 @@ class Command extends CI_Controller {
 		);
 		$camID = $_POST['cam_id'];
 		$userName = $_POST['user_name'];
-		$out = $this->udp_model->ShrCamera($camID,$userName);
+		$chUserName = iconv("UTF-8","GB2312",$userName);
+		$out = $this->udp_model->ShrCamera($camID,$chUserName);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
@@ -142,6 +148,7 @@ class Command extends CI_Controller {
 	{
 		$this->udp_model->Logout();
 	}
+	
 	public function check_share_user()
 	{
 		$devID = $_POST['dev_id'];
@@ -149,6 +156,7 @@ class Command extends CI_Controller {
 		$toJson = iconv("GB2312","UTF-8",$out);
 		echo json_encode($toJson);
 	}
+	
 	public function cancel_share()
 	{
 		$errorDescArray = array(
@@ -214,6 +222,20 @@ class Command extends CI_Controller {
 		{
 			$out = $this->udp_model->ChangeUserPwd($newPwd);
 		}
+		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
+		echo json_encode($outArray);
+	}
+	public function change_device_name()
+	{
+		$errorDescArray = array(
+				"0d" => "成功",
+				"05" => "失败",
+				"00" => "与服务器通讯失败"
+		);
+		$devID = $_POST['devID'];
+		$devName = $_POST['devName'];
+		$chDevName = iconv("UTF-8","GB2312",$devName);
+		$out = $this->udp_model->ChangeDeviceName($devID,$chDevName);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}

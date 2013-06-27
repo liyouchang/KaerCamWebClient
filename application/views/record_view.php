@@ -86,13 +86,19 @@
 		
 			<div class="row">	
 				<div class="box span11">
+					
 					<div class="box-header well" data-original-title>
 						<h2>查询结果</h2>
 						<div class="box-icon">	
 							<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 						</div>
 					</div>
+					
+					
 					<div id="recordFileList" class="box-content">
+						
+						<button type="button" class="btn btn-primary pull-right" onclick="PlaySelectRecord()">播放选中视频</button>
+						<button type="button" class="btn pull-right" onclick="SelectAllRecord()">全部选择</button>
 						<table class="table table-bordered table-striped table-condensed">
 							  <thead>
 								  <tr>
@@ -100,7 +106,7 @@
 									  <th>开始时间</th>
 									  <th>结束时间</th>
 									  <th>大小</th>   
-									  <th>备注</th>    
+									  <th>选择</th>    
 									  <th>操作</th>                                          
 								  </tr>
 							  </thead>   
@@ -211,6 +217,7 @@ function QueryRecordFileList()
 	}
 	return true;
 }
+
 function InsertRecordTable(fileArray)
 {
 	var x;
@@ -225,12 +232,13 @@ function InsertRecordTable(fileArray)
 		
 		$("#recordFileList tbody").append("<tr><td>"+fileArray[x].fileNo+
 				"</td><td>"+ss+"</td><td>"+es+"</td><td>"+
-				fileArray[x].fileSize+"</td><td></td>"+
+				fileArray[x].fileSize+"</td><td><input type='checkbox' onchange='toggleCheckbox(this)'></td>"+
 			"<td><a class='label label-success' onclick='PlayRecord(this)' fileNo="+
 			fileArray[x].fileNo+">播放录像</a></td></tr>");
 		fileArray[x]
 	}
 }
+
 function PlayRecord(element)
 {
 	var player = document.getElementById("player");
@@ -240,6 +248,7 @@ function PlayRecord(element)
 		return false;
 	}
 	var fileNo = $(element).attr('fileNo');
+	player.PlayRemoteRecord(g_cameraID,-1);
 	var retStr = player.PlayRemoteRecord(g_cameraID,fileNo);
 	var obj = JSON.parse(retStr);
 	if (obj.retValue == 13) {
@@ -247,8 +256,45 @@ function PlayRecord(element)
 	} else {
 		AlertMessage("播放录像失败-"+obj.retDes,"error");
 	}
-	return true;
+	return true;	
+}
+function SelectAllRecord()
+{
+	$("#recordFileList tbody").find(':checkbox').attr("checked",true);
+	//$("#recordFileList tbody").find(':checkbox').val(1);
+//	$(":checkbox").attr("checked",element.checked);
+//	$(":checkbox").val(1);
+}
+function PlaySelectRecord()
+{
+	var player = document.getElementById("player");
+	if(player == null)
+	{
+		AlertMessage("播放插件未安装","error");
+		return false;
+	}
+	var retStr = null;
 	
+	
+	$("#recordFileList tbody").find(':checkbox').each(function(){
+			if($(this).attr('checked')){
+				var tdText = $(this).parent().parent().children().first().text();
+				var fileNo = parseInt(tdText);
+				if(retStr==null){
+					player.PlayRemoteRecord(g_cameraID,-1);
+					retStr = player.PlayRemoteRecord(g_cameraID,fileNo);
+				}else{
+					player.PlayRemoteRecord(g_cameraID,fileNo);
+				}
+			}
+		});
+	var obj = JSON.parse(retStr);
+	if (obj.retValue == 13) {
+		AlertMessage("播放录像成功","success");
+	} else {
+		AlertMessage("播放录像失败-"+obj.retDes,"error");
+	}
+
 }
 //-->
 </script>

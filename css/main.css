@@ -21,7 +21,7 @@ textarea {
 body {
     font-size: 1em;
     line-height: 1.4;
-    background-image: url(../img/login-back.jpg);
+    background-image: url(../img/all-back.jpg);
 	background-repeat: repeat;
 	
 }
@@ -430,6 +430,42 @@ margin-top:0px;margin-bottom:0px;line-height: 30px;
 .screen span.screen6{background:url(../img/screen.png) -58px 0px;}
 .screen span.screen8{background:url(../img/screen.png) -87px 0px;}
 
+/*login-box*/
+.login-box{
+	background-image: url(../img/login_back.jpg);
+	background-repeat: no-repeat;
+	height:714px;
+	width:1422px;
+	position: absolute;
+  left: 0px;
+  top: 0px;
+	
+}
+.login-box .input-prepend{
+	margin-bottom: 10px;
+}
+.login-box .btn{
+	width:150px;
+}
+
+
+#login-form{
+position: relative;
+  left:580px;
+  top: 210px;
+  width:700px;
+}
+ .forgetPwd {
+	padding-left:50px;
+	font-size:14px;
+	padding-top:5px;
+}
+.plugin-down{
+	float:right;
+	font-size:12px;
+	position: relative;
+	right:300px;
+}
 
 /* ==========================================================================
    EXAMPLE Media Queries for Responsive Design.

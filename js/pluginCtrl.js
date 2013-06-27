@@ -241,6 +241,7 @@ function InitPlayer(){
 	}
 	var client_id = $.cookie('clientID');
 	player.InitailCtrl(1);
+	
 	var Addr =CENTER_SVR_IP;
 	var Port = 22616;
 	var retStr = player.ConnectServer(Addr,Port,client_id);
@@ -707,12 +708,15 @@ function AutoYuntai()
 function CamStatusCheck(info)
 {
 	
-	var statusObj = eval("(" + info + ")");
-	g_cameraID = statusObj.cameraID;
+	var statusObj =JSON.parse(info);
+	var devID = statusObj.devID;
+	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+	if(treeObj==null)
+		return;
 	switch(statusObj.reportType)
 	{
 	case 1://镜头选择
-		
+		g_cameraID = statusObj.cameraID;
 		if(g_cameraID == 0)
 			SetControlPTZ(0);
 		else
@@ -720,6 +724,22 @@ function CamStatusCheck(info)
 		break;
 	case 2://视频停止
 		SetControlPTZ(0);
+		break;
+	case 3://设备上线
+		var node  = treeObj.getNodeByParam("id", devID);
+		 if(node.status==0){
+			node.iconSkin = "encoder";
+			node.status=1;
+			treeObj.updateNode(node);
+		}
+		break;
+	case 4://设备下线
+		var node  = treeObj.getNodeByParam("id", devID);
+		if(node.status==1){
+			node.iconSkin = "encoderOffline";
+			node.status=0;
+			treeObj.updateNode(node);
+		}
 		break;
 	}
 	

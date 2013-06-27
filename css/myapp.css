@@ -444,13 +444,8 @@ float:left !important;
 .pull-right{
 float:right !important;
 }
-.remember{
-	margin-left:20px;
 
- }
-.forgetPwd {
-	padding-left:50px;
-}
+
 .green {
 color: #458746;
 }
@@ -463,17 +458,7 @@ color: #3986AC;
 .yellow {
 color: #F99406;
 }
-.login-box{
 
-}
-.login-box .input-prepend{
-margin-bottom: 10px;
-}
-.login-box .btn{
-margin-top:15px;
-margin-left:30px;
-width:200px;
-}
 .charisma_qr{
 height:136px;
 width:136px;

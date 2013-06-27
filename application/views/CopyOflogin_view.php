@@ -3,49 +3,52 @@ $no_visible_elements=true;
 include('header.php'); 
 ?>
 
-		<div class="login-box">
-				
+			<div class="row">
+				<div class="span12 center login-header">
+					<h2>欢迎使用视频监控系统</h2>
+				</div><!--/span-->
+			</div><!--/row-->
+			
+			<div class="row">
+				<div class="span3"></div>
+				<div class="span6 login-box">
+					<div class="alert alert-info center" id="alert-message">
+						请使用您的用户名和密码登录.
+					</div>
 					
-					<form class="form-horizontal" id="login-form" action="#" method="post">
+					<form class="form-inline center" id="login-form" action="#" method="post">
 						<fieldset>
 							<div class="control-group"> 
-								<label class="control-label" for="myUserName">用户名</label>
-								<div class=" controls " title="用户名" data-rel="tooltip">
-									<input autofocus class="input-large" name="username" id="username" type="text"  />
+								<div class="input-prepend controls " title="用户名" data-rel="tooltip">
+									<span class="add-on"><i class="icon-user"></i></span>
+									<input autofocus class="input-large span10" name="username" id="username" type="text"  />
 								</div>
 							</div>
 							<div class="control-group ">
-								<label class="control-label" for="myPassword">密&nbsp;&nbsp;&nbsp;码</label>
-								<div class="controls"  title="密码" data-rel="tooltip">
-									<input class="input-large" name="password" id="password" type="password"  />
+								<div class="controls input-prepend"  title="密码" data-rel="tooltip">
+									<span class="add-on"><i class="icon-lock"></i></span>
+									<input class="input-large span10" name="password" id="password" type="password"  />
 								</div>
 							</div>
-							<div class="control-group">	
-							    <div class="controls">
-														
-								<label class="checkbox  inline pull-left"><input type="checkbox" class="" id="remember-long" onclick=SetCheck() /> 
-									记住密码 </label>
-								<a href="<?php echo base_url('login/forget_pwd')?>" class="forgetPwd inline pull-left">            
-								忘记密码?</a>
-								</div> 
+						
+							<div class="control-group">								
+								<label class="checkbox remember add-on"><input type="checkbox" class="" id="remember-long" onclick=SetCheck() /> 记住密码   </label>
+								<a href="<?php echo base_url('login/forget_pwd')?>" class="forgetPwd" style="disabled:true"> 忘记密码? </a> 
 							</div>
 							<div class = "control-group">
-							 	<div class="controls">
-									<input type="submit" class="btn btn-primary btn-login center" value="登录"/>
-								</div>
-							</div> 	
-							<div class = "control-group">
-							 	<div class="controls plugin-down">
-									<a id="hreDownLoad" href ="<?php echo $pluginFilePath?>"  class="" style="display:block;">插件下载</a>
-                   	 				<a id="signup" href ="<?php  echo base_url("login/register")?>"  class="" style="display:block;">用户注册</a>
-								</div>
+								<input type="submit" class="btn btn-primary btn-login center" value="登录"/>
 							</div> 	 
 						</fieldset>
 					</form>
 					
-				
-		</div><!--/login-box-->
-		
+					<div class="login_Panel_bottom center">
+                   	 	<a id="hreDownLoad" href ="<?php echo $pluginFilePath?>"  class="pull-left" style="display:block;">插件下载</a>
+                   	 	<a id="signup" href ="<?php echo $pluginFilePath?>"  class="pull-right" style="display:block;"></a>
+                   	 	<a id="signup" href ="<?php  echo base_url("login/register")?>"  class="pull-right" style="display:block;">用户注册</a>
+                   	 	
+                	</div>
+				</div><!--/span-->
+			</div><!--/row-->
 		
 		
 <?php include('footer.php'); ?>
@@ -87,10 +90,17 @@ $(function () {
 			$('.remember').unbind('click');
 
 			//已经向服务器提交了信息，所以将页面上的所有输入框按钮设置成不可用状态，这样可以有效的避免重复提交
-			AlertMessage("正在登陆……","info");
+			changeAlertMsg("正在登陆……","alert-info");
 			ajaxCheckLogin(uname, pwd);
 		},
-
+		errorPlacement:function(label, element){
+			$(element).popover('destroy');
+			$(element).popover({"content":label.html(),"trigger":"manual"});
+			$(element).popover('show');
+		},
+		success:function(label, element){
+			$(element).popover('destroy');
+		}
 	});
 
 	var ajaxCheckLogin = function (uname, pwd, remb) {
@@ -114,15 +124,15 @@ $(function () {
 						$.cookie('UserName', null,{ expires: 7, path: '/' });
 						$.cookie('Password', null,{ expires: 7, path: '/' });
 					}
-					AlertMessage(data.errorDesc,"success");
+					changeAlertMsg(data.errorDesc,"alert-success");
 					location.href = BASE_URL+"start/monitoring";				
 				}else {
-					AlertMessage(data.errorDesc,"error");
+					changeAlertMsg(data.errorDesc,"alert-error");
 					$("#login-form input").attr('disabled', false);
 				}
 			},
 			error: function () {
-				AlertMessage("超时，请重新登陆","error");
+				changeAlertMsg("超时，请重新登陆","alert-error");
 				$("#login-form input").attr('disabled', false);
 				$('.remember').bind('click', function () { checkClick(); });
 				$(".btn-master").removeClass("visibility");
