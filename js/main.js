@@ -115,7 +115,9 @@ function StartRTVideo(cameraID)
 		AlertMessage("开始实时视频失败，"+obj.retDes,"error");
 		return false;
 	}
+
 	SetControlPTZ(1);
+	
 	AlertMessage("开始实时视频成功","success");
 	return true;	
 }
@@ -144,21 +146,22 @@ function SetDevRecord()
 		},
 		complete:function(){
 			//抓拍
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/set_dev_record',
-				dataType: 'json',
-				data:{dev_id:g_selectTreeNode.id, type:1, start:snapStart},
-				success: function (data) {
-					if (data.errorCode == "0d") 
-						AlertMessage("设置抓拍参数-"+data.errorDesc,"success"); 	
-					else
-						AlertMessage("设置抓拍参数-"+data.errorDesc,"error");			
-				},
-				error: function () {
-					AlertMessage("设置抓拍参数-"+"操作失败","error");
-				}
-			});	
+//			
+//			$.ajax({
+//				type: 'POST',
+//				url: BASE_URL+'command/set_dev_record',
+//				dataType: 'json',
+//				data:{dev_id:g_selectTreeNode.id, type:1, start:snapStart},
+//				success: function (data) {
+//					if (data.errorCode == "0d") 
+//						AlertMessage("设置抓拍参数-"+data.errorDesc,"success"); 	
+//					else
+//						AlertMessage("设置抓拍参数-"+data.errorDesc,"error");			
+//				},
+//				error: function () {
+//					AlertMessage("设置抓拍参数-"+"操作失败","error");
+//				}
+//			});	
 		}
 		
 	});	
@@ -184,21 +187,21 @@ function GetDevRecordParam()
 		},
 		complete:function(){
 			//抓拍
-			$.ajax({
-				type: 'POST',
-				url: BASE_URL+'command/get_dev_record',
-				dataType: 'json',
-				data:{dev_id:g_selectTreeNode.id,type:1},
-				success: function (data) {
-					if (data.errorCode == "0d") 
-						$("#snapCheck").attr("checked",!!data.status); 	
-					else
-						AlertMessage("获取抓拍参数失败-"+data.errorDesc,"error");			
-				},
-				error: function () {
-					AlertMessage("获取抓拍参数-"+"操作失败","error");
-				}
-			});	
+//			$.ajax({
+//				type: 'POST',
+//				url: BASE_URL+'command/get_dev_record',
+//				dataType: 'json',
+//				data:{dev_id:g_selectTreeNode.id,type:1},
+//				success: function (data) {
+//					if (data.errorCode == "0d") 
+//						$("#snapCheck").attr("checked",!!data.status); 	
+//					else
+//						AlertMessage("获取抓拍参数失败-"+data.errorDesc,"error");			
+//				},
+//				error: function () {
+//					AlertMessage("获取抓拍参数-"+"操作失败","error");
+//				}
+//			});	
 		}
 	});	
 	
@@ -433,6 +436,8 @@ function GetWifi()
 		AlertMessage("刷新网络失败-"+obj.retDes,"error");
 	}
 }
+
+
 function InsertAPListTable(apArray)
 {
 	var x;
@@ -447,6 +452,7 @@ function InsertAPListTable(apArray)
 		case 3:encryptStr="WPA2-PSK";break;
 		}
 				
+		
 		$("#model_SetWifi tbody").append("<tr><td>"+apArray[x].listNo+
 				"</td><td>"+apArray[x].essid+"</td><td>"+encryptStr+
 				"</td><td><a class='badge badge-important' onclick='SetWifi(this)' listNo="+

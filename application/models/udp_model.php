@@ -32,7 +32,6 @@ class UDP_Model extends CI_Model {
 			"GetDevRecord"=>"H4IIICC",
 			"ChgUserPwd"=>"H4IICa40",
 			"ChgDevName"=>"H4IICa*",
-			
 	);
 	protected $respondMsgFromat = array(
 			"setcretKey"=>"H4head/Ilen/IclientID/a8secretKey",
@@ -85,6 +84,7 @@ class UDP_Model extends CI_Model {
 
 	public function PConnectServer()
 	{
+		
 		$this->socket = stream_socket_client("udp://$this->center_ip:$this->center_port",
 				$errno, $errstr,30,STREAM_CLIENT_CONNECT);
 				//$this->socket = pfsockopen("tcp://$this->center_ip",$this->center_port, $errno, $errstr);
@@ -109,14 +109,14 @@ class UDP_Model extends CI_Model {
 	 * passWord: string 密码
 	 * return: string 登陆信息
 	 */
-	public function login($userName,$passWord)
+	public function login($userName,$passWord,$mac)
 	{
 		try {
 			$this->PConnectServer();
 			//生成32位加密数据(md5 加密）
 			$secretData= md5($passWord);
 			$data = "<?xml version='1.0' encoding='utf-8'?>".
-			"<Login><Info U=\"$userName\" P=\"$secretData\" M=\"\" /></Login>\n";
+			"<Login><Info U=\"$userName\" P=\"$secretData\" M=\"$mac\" /></Login>\n";
 			$sendLen = strlen($data) + 10;
 			$sendMsg = pack($this->requestMsgFromat['login'],"FF01",$sendLen,"0",$data);
 			$recvMsg =  $this->writeAndRead($sendMsg);
@@ -145,13 +145,14 @@ class UDP_Model extends CI_Model {
 			$sendMsg = pack($this->requestMsgFromat['register'],"FF00",$sendLen,$client_id,7,0,$data);
 			
 			$recvMsg =  $this->writeAndRead($sendMsg);
+							
 			$outArray = unpack($this->respondMsgFromat['register'],$recvMsg);
 			$this->session->set_userdata(array('clientID'=>$outArray['clientID']));
-	
+				
 		} catch (Exception $e) {
 			log_message('error',$e->getMessage());
 			return "00";
-		}
+		}		
 		fclose($this->socket);
 		return $outArray['respMsg'];
 	}

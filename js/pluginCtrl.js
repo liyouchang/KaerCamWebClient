@@ -130,6 +130,17 @@ function searchCamera() {
 	}
 }
 
+function IsShareCamera(cameraID)
+{
+	var devID = cameraID>>8;
+	var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+	var node = treeObj.getNodeByParam("id", devID, null);
+	if(node != null && node.pId == ShrListTreeID)
+		return true;
+	return false;
+}
+
+
 // camera control pannel functions
 function MM_swapImgRestore(id, cs1, cs2) {
 	if ($("#" + id).hasClass(cs2)) {
@@ -237,6 +248,7 @@ function InitPlayer(){
 	var player = document.getElementById("player");
 	if(player == null)
 	{
+		
 		return false;
 	}
 	var client_id = $.cookie('clientID');
@@ -249,10 +261,17 @@ function InitPlayer(){
 	if (obj.retValue == 13) {
 		login = true;
 		$("#infoText").text("初始化成功");
+		retStr = player.CheckVersion();
+		obj = JSON.parse(retStr);
+		if(obj.update == true){
+			alert("检测到新版本播放插件，请下载插件升级！");
+			location.href = BASE_URL+"login/logout";
+		}
 	} else {
 		login = false;
 		$("#infoText").text("初始化失败"+obj.retDes);
 	}
+	
 }
 
 // 登录播放插件
@@ -281,6 +300,10 @@ function initPlugin() {
 		InitPlayer();
 		//loginServer();
 	} else {// 未安装插件提示
+		//if(confirm("您未安装播放插件，是否安装？")){
+		//	location.href = BASE_URL+"login/logout";
+		//}
+		
 		hasplug = false;
 		$("#infoText").text("监控插件未安装！");
 	}
@@ -540,6 +563,37 @@ function SetControlPTZ(flag) {
 			return;
 		}
 		g_enablePannel = 1;
+		
+		if(IsShareCamera(g_cameraID))//共享摄像头可以进行的操作
+		{
+
+			//控制监听
+			MM_swapImgRestore("boardopen","board_open","uboard_open");
+			$("#linkboardo").click(function(){
+				StartListen(0);
+			});
+			MM_swapImgRestore("boardclose","board_close","uboard_close");
+			$("#linkboardc").click(function(){
+				StopListen(0);
+			});
+			
+			//控制录像
+			MM_swapImgRestore("recopen","rec_open","urec_open");
+			$("#linkreco").click(function(){
+				StartRecord(0);
+			});
+			MM_swapImgRestore("recclose","rec_close","urec_close");
+			$("#linkrecc").click(function(){
+				StopRecord(0);
+			});
+			
+			//抓拍
+			MM_swapImgRestore("zpopen","zp_open","uzp_open");
+			$("#zpopen").click(function(){
+				SnapPic(0);
+			});
+			return;
+		}
 		// up
 		MM_swapImgRestore("direction02", "direction_02", "udirection_02");
 		$("#linkDir02").mousedown(function() {
@@ -582,7 +636,7 @@ function SetControlPTZ(flag) {
 
 		// auto自动云台
 		MM_swapImgRestore("direction05", "direction_05", "udirection_05");
-		$("#linkDir05").mousedown(function() {
+		$("#linkDir05").click(function() {
 			AutoYuntai();
 		});
 
@@ -717,7 +771,7 @@ function CamStatusCheck(info)
 	{
 	case 1://镜头选择
 		g_cameraID = statusObj.cameraID;
-		if(g_cameraID == 0)
+		if(g_cameraID == 0 )
 			SetControlPTZ(0);
 		else
 			SetControlPTZ(1);

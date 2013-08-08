@@ -11,6 +11,8 @@ class Command extends CI_Controller {
 	{
 		$errorDescArray = array(
 				"0d" => "登录成功",
+				"01" => "用户已注销",
+				"02" => "用户已过期",
 				"05" => "用户名不存在",
 				"06" => "用户名或密码错误",
 				"07" => "用户已登录",
@@ -18,8 +20,10 @@ class Command extends CI_Controller {
 		);
 		$name = $_POST['user_name'];
 		$pwd = $_POST['user_pwd'];
-		
-		$out = $this->udp_model->login($name,$pwd);
+		$mac = $_POST['user_mac'];
+		$chName = iconv("UTF-8","GB2312",$name);
+		log_message('error',"用户登录 ".$chName);
+		$out = $this->udp_model->login($chName,$pwd,$mac);
 		$client_id = $this->session->userdata('clientID');
 		$outArray = array("errorCode" => $out,
 				"errorDesc" => $errorDescArray[$out],
@@ -54,6 +58,9 @@ class Command extends CI_Controller {
 			$newdata = array('name' => $name,'pwd' => $pwd);
 			$this->session->set_userdata($newdata);
 		}
+		
+		log_message('error',"用户注册返回 ".json_encode($outArray));
+		
 		echo json_encode($outArray);
 	}
 	
@@ -68,7 +75,8 @@ class Command extends CI_Controller {
 		);
 		$name = $_POST['user_name'];
 		$email = $_POST['reg_email'];
-		$out= $this->udp_model->RefindPwd($name,$email);
+		$chName = iconv("UTF-8","GB2312",$name);
+		$out= $this->udp_model->RefindPwd($chName,$email);
 		$outArray = array("errorCode"=>$out,"errorDesc" => $errorDescArray[$out]);
 		echo json_encode($outArray);
 	}
@@ -244,4 +252,4 @@ class Command extends CI_Controller {
 
 
 /* End of file login.php */
-/* Location: ./application/controll
+/* Location: ./application/controll*/

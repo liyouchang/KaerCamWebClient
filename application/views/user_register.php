@@ -45,7 +45,8 @@ include('header.php');
 					  
 					  <div class="control-group">
 					    <div class="controls">
-					      <label id="agree"  class="checkbox"><input name="agree" type="checkbox"> 我同意<a href="login">用户协议</a></label>
+					      <label id="agree"  class="checkbox"><input name="agree" type="checkbox"> 
+					      	我同意<a href="<?php  echo base_url("plugin/agreement.html")?>">用户协议</a></label>
 					   	</div>
 					   </div>
 					    
@@ -132,19 +133,20 @@ $(document).ready(function () {
 				success: function (data) {
 					if (data.errorCode == "0d") {
 						alert(data.errorDesc);
-						location.href = BASE_URL+"start/my_camera";				
+						location.href = BASE_URL+"start/monitoring";				
 					}else if(data.errorCode=='08')
 					{
+						AlertMessage("验证码已经发到您的注册邮箱，在十分钟内有效");
 						$("#register_btn").val("注册");
 						$("#xcode_group").css('display','block');
 					}
 					else
 					{
-						alert(data.errorDesc);
+						AlertMessage(data.errorDesc,'error');
 					}
 				},
 				error: function () {
-					alert("失败");
+					AlertMessage("失败....",'error');
 				}
 			});
 

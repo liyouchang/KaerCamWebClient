@@ -82,12 +82,12 @@ $(function () {
 		rules: {
 			oldPassword: {required: true,maxlength: 20,minlength:6},
 			newPassword: {required: true,maxlength: 20,minlength:6},
-			againPassword: {required: true,equalTo: "#newPassword"},
+			againPassword: {required: true,equalTo: "#newPassword"}
 		},
 		messages: {
 			oldPassword: {required: "请输入原密码",maxlength:"密码最大长度为20",minlength:"密码最短长度为6"},
 			newPassword: {required: "请输入新密码",maxlength:"密码最大长度为20",minlength:"密码最短长度为6"},
-			againPassword: {required: "请输入确认密码",equalTo: "确认密码与新密码需一致"},
+			againPassword: {required: "请输入确认密码",equalTo: "确认密码与新密码需一致"}
 		},
 		submitHandler: function(){  
 			var params = {oldPwd:$("#oldPassword").val() ,newPwd:$("#newPassword").val()};

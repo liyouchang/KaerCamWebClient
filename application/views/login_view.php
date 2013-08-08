@@ -31,13 +31,15 @@ include('header.php');
 							</div>
 							<div class = "control-group">
 							 	<div class="controls">
-									<input type="submit" class="btn btn-primary btn-login center" value="登录"/>
+									<input type="submit" class="btn btn-primary btn-login" value="登录"/>
 								</div>
 							</div> 	
 							<div class = "control-group">
 							 	<div class="controls plugin-down">
 									<a id="hreDownLoad" href ="<?php echo $pluginFilePath?>"  class="" style="display:block;">插件下载</a>
+									<a id="androidDownLoad" href ="<?php  echo base_url("MobileVideo.apk")?>"  class="" style="display:block;">android客户端下载</a>
                    	 				<a id="signup" href ="<?php  echo base_url("login/register")?>"  class="" style="display:block;">用户注册</a>
+                   	 				
 								</div>
 							</div> 	 
 						</fieldset>
@@ -89,14 +91,32 @@ $(function () {
 			//已经向服务器提交了信息，所以将页面上的所有输入框按钮设置成不可用状态，这样可以有效的避免重复提交
 			AlertMessage("正在登陆……","info");
 			ajaxCheckLogin(uname, pwd);
-		},
+		}
 
 	});
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+};
 
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+}
+function guid20() {
+	  return s4() + s4() + s4() + s4() + s4();
+	}
 	var ajaxCheckLogin = function (uname, pwd, remb) {
 		$(".btn-master").addClass("visibility");
+		var uuid = $.cookie('uuid');
+		if(uuid == null)
+		{
+			uuid = guid20();
+			$.cookie('uuid',uuid, { expires: 7, path: '/' });
+		}
 		//var params = "user_name=" + decodeURI(uname) + "&user_pwd=" + decodeURI(pwd) ;
-		var params = {user_name:decodeURI(uname) ,user_pwd:decodeURI(pwd)};
+		var params = {user_name:decodeURI(uname) ,user_pwd:decodeURI(pwd),user_mac:uuid};
 		
 		$.ajax({
 			type: 'POST',

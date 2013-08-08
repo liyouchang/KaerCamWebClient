@@ -74,7 +74,7 @@ $(document).ready(function () {
 				required: "请输入用户名",
 				maxlength:"用户名长度为8"
 			},
-			email: "请输入正确的email地址",
+			email: "请输入正确的email地址"
 		},
 		submitHandler: function(){  
 			var params = {user_name:$("#username").val(),reg_email:$("#email").val()};

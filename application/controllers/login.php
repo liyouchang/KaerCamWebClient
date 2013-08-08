@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+﻿<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 
@@ -7,6 +7,7 @@ class Login extends CI_Controller {
 		//$this->load->model("Socket_model");
 		
 		$this->data['pluginFilePath'] = base_url("plugin/KeWebCamSetup.exe");
+		$this->data['androidFilePath'] = base_url("plugin/MobileVideo.apk");
 		$this->data['centerSvrIp']=$this->config->item('center_server_ip');
 	}
 	public $data = array("title"=> '登录');

@@ -6,6 +6,7 @@
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
 		
 		<hr>
+		
 		<!-- 
 		<div class="modal hide fade" id="myModal">
 			<div class="modal-header">
@@ -22,6 +23,7 @@
 		</div>
  		-->
 		<footer >
+		
 			<!-- <p class="pull-left">&copy; <a href="http://www.kaer.cn/" target="_blank">山东卡尔电器股份有限公司</a> <?php echo date('Y') ?></p> --> 
 			<!-- <p class="pull-right">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p> -->
 			

@@ -342,9 +342,11 @@ function logout()
 					    <label class="checkbox inline">
 						  <input type="checkbox" id="recordCheck" onchange='toggleCheckbox(this)'  > 录像
 						</label>
+						<!-- 
 						<label class="checkbox inline">
 						  <input type="checkbox" id="snapCheck" onchange='toggleCheckbox(this)' > 抓拍
 						</label>
+						 -->
 					  </div>
 					  	</div>
 				</form>

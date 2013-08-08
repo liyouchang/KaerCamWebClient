@@ -241,7 +241,8 @@ function docReady(){
 		e.preventDefault();
 		$('#myModal').modal('show');
 	});
-
+	
+	//初始化插件
 	initPlugin();
 	
 	 // we use an inline data source in the example, usually data would
